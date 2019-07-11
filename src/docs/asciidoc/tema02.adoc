@@ -1,0 +1,38 @@
+= Curso de Desarrollo
+IES Systems <isidoro.trevino@ies-systems.com>
+2019-07-11
+:revnumber: {project-version}
+:example-caption!:
+ifndef::imagesdir[:imagesdir: images]
+ifndef::sourcedir[:sourcedir: ../java]
+
+== Conceptos Avanzados Java
+
+=== I/O Streams
+
+* Permiten el procesamiento y/o enrutamiento de flujos de datos (Lectura/Escritura) de 
+una manera genérica
+** Archivos
+** Sockets
+** Otros medios de comunicación
+
+=== I/O Streams
+
+* Secuencias de datos
+** **Input Stream** -> Leer datos de una fuente
+** **Output Stream** -> Para escribir datos en un destino
+* Los streams siempre deben ser cerrados
+* Generalmente se requiere
+
+=== Channels (NIO)
+
+=== Colecciones
+
+=== Listas
+
+=== Mapas
+
+=== Sets
+
+=== Collection Streams
+

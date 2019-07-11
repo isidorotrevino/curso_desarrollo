@@ -1,0 +1,252 @@
+= Curso de Desarrollo
+IES Systems <isidoro.trevino@ies-systems.com>
+2019-07-11
+:revnumber: {project-version}
+:example-caption!:
+ifndef::imagesdir[:imagesdir: images]
+ifndef::sourcedir[:sourcedir: ../java]
+
+== Java
+
+=== Plataforma Java
+
+* Suite de programas que permite la ejecución de programas
+** Kit de desarrollo (JDK)
+*** Compilador
+** Entorno de Ejecución (JRE)
+*** Máquina Virtual (JVM)
+*** Suite de bibliotecas
+
+=== Conceptos principales
+
+* Paradigma Orientado a Objetos (OOP)
+** El principal elemento de procesamiento es el objeto
+* Entorno de ejecución 
+** Semi-interpretado (JIT Compiler)
+** Lenguaje intermedio  (Bytecode)
+
+=== Generalidades
+
+* Estructura de proyectos
+- Directorio base (raíz del proyecto) +
+|- src +
+|-- main +
+|--- java +
+|-- test +
+|--- java +
+
+== Lenguaje de programación Java
+
+=== Clase
+
+* Plantilla o prototipo mediante la cual se crean objetos
+* Sus elementos son:
+** **Paquete (Package):** Ubicación o clasificación de la clase
+** **Atributos (Attributes / Fields):** Campos o variables propias de la clase
+
+=== Clase
+
+* Elementos:
+** **Métodos (Methods):** Bloque de código o función que ejecuta una serie
+de instrucciones
+** **Constructor:** Método especial que inicializa el objeto   
+
+=== Ejemplo 1
+
+[source,java]
+----
+package com.test; //Paquete
+
+public class Objeto{
+
+	String atributo; // Atributo
+	
+	// Método
+	String metodo(String parametro1,String parametro2){		
+	}
+	
+	//Constructor
+	Objeto(){	
+	}
+}
+----
+
+=== Atributos
+
+* Almacenan un valor dentro de la instancia de una clase
+** Se requiere asignar el tipo (Clase o primitivo)
+
+[<modificador>,...] <tipo> nombre;
+
+[source,java]
+----
+public static final String atributo;
+----
+
+=== Métodos
+
+* Su estructura es: +
+[<modificador>,...] <tipo de retorno> nombre ( [<parametro>,...] ) +
+	[throws [<excepcion>,...]] { +
+	<cuerpo> +
+}
+
+[source,java]
+----
+protected double dividir(double a1,double a2) 
+	throws ArithmeticException{
+	return a1/a2;	
+} 
+----
+
+=== Constructor
+
+* Método especial que no devuelve resultado
+* Se ejecuta al instanciar una clase
+* Si no se especifica el compilador agrega un constructor por default
+
+[source,java]
+----
+public Objeto(String param1){
+	//Inicialización de variables, etc.
+}
+----
+
+=== Ejemplo 2
+
+[source,text]
+----
+#Creación de directorio de compilados
+mkdir -p build/classes/java/main
+#Compilación
+javac -d build/classes/java/main src/main/java/com/ies/curso\
+/tema01/Ejemplo02.java
+#Ejecución
+java -cp build/classes/java/main/ com.ies.curso.tema01.Ejemplo02
+----
+== Lenguaje de programación Java
+
+=== Encapsulamiento
+
+* Consiste en el agrupamiento de métodos y atributos en una clase
+* Mediante el encapsulamiento, se ocultan los detalles internos de 
+implementación en las clases.
+* La interacción y exposición de la funcionalidad se realiza mediante
+métodos
+
+=== Modificadores
+
+* Modificadores de visibilidad / acceso
+|===
+| public | protected | default | private
+|===
+
+* Otros modificadores
+
+|===
+| static | final | abstract | synchronized | volatile
+|===
+
+=== Herencia
+
+* Mecanismo mediante el cual una clase puede adquirir los atributos y los
+objetos de una clase padre
+* Utiliza el modificador **extends**
+* Reglas
+** Solo se puede heredar de una clase
+** Puede invocar directamente clases / atributos de tipo public / protected del
+padre
+** Para invocar funcionalidad del padre se puede usar la instrucción **super**
+
+=== Clases estáticas / anidadas
+
+* Solo existen dentro de otra clase "anidadora"
+* Se utilizan como un atajo cuando dicha clase no se utiliza fuera de la "anidadora"
+(Encapsulamiento) 
+
+=== Ejemplo 03
+
+[source,text]
+----
+javac -d build/classes/java/main src/main/java/com/ies/curso\
+/tema01/Ejemplo03.java
+java -cp build/classes/java/main/ com.ies.curso.tema01.Ejemplo03
+----
+
+== Polimorfismo
+
+* Capacidad de un objeto de tomar muchas formas
+* Una variable puede adoptar el valor de su tipo o de una subclase del tipo declarado
+
+=== Interfaces
+
+* Tipo de referencia
+* Define un "contrato de implementación" 
+* Puede contener:
+** Definiciones de métodos
+** Métodos default
+** Constantes
+** Métodos estáticos
+** Clases estáticas 
+
+=== Clases abstractas
+
+* Clase que puede implementar ciertos métodos y declarar las definiciones de otros
+* No se puede instanciar
+* Sirve como una plantilla base para que otras clases hereden de ella
+
+=== Clases anónimas
+
+* Se trata de implementaciones de interfaces que se pueden realizar dentro de un
+método
+* Son clases desechables ya que no se pueden reutilizar en ningún otro lado del 
+programa
+* Generalmente se utilizan para implementar funcionalidad general
+
+=== Ejemplo 04
+
+[source,text]
+----
+javac -d build/classes/java/main src/main/java/com/ies/curso/\
+tema01/Ejemplo04.java
+java -cp build/classes/java/main/ com.ies.curso.tema01.Ejemplo04
+----
+
+== Polimorfismo
+
+=== Sobrecarga de operadores (Operation overload)
+
+* Mecanismo mediante el cual podemos crear diversos métodos
+con el mismo nombre, pero diferente número y/o tipo de dato de sus
+parámetros
+
+=== Reemplazo (Override)
+
+* Mecanismo mediante el cual podemos sobreescribir la definición de 
+un método de una clase padre para implementar una funcionalidad parcial
+o totalmente distinta
+* El método padre no debe tener el modificador final
+
+=== Excepciones
+
+* Implica un problema que surge durante la ejecución de un programa
+* Existen tres tipos principales:
+** **Checked exceptions:** Son identificados por el compilador y 
+necesariamente deben ser procesadas por el código
+** **Unchecked exceptions:** Excepción que puede surgir en tiempo de ejecución
+y pueden ser procesadas o no por el código (También llamadas Runtime Exceptions)
+
+=== Excepciones
+
+** **Errors:** Problemas de ejecución fuera del contexto del programa y que 
+generalmente no son recuperables. Pueden ser tratados por el código pero no hay
+garantía de una correcta ejecución después de su generación
+
+=== Ejemplo 05
+
+[source,text]
+----
+javac -d build/classes/java/main src/main/java/com/ies/curso/\
+tema01/Ejemplo05.java
+java -cp build/classes/java/main/ com.ies.curso.tema01.Ejemplo05
+----

@@ -1,0 +1,17 @@
+= Curso de Desarrollo
+IES Systems <isidoro.trevino@ies-systems.com>
+2019-07-11
+:revnumber: {project-version}
+:example-caption!:
+ifndef::imagesdir[:imagesdir: images]
+ifndef::sourcedir[:sourcedir: ../java]
+
+== Documentación
+
+* Documentación Java API
+** https://docs.oracle.com/javase/8/docs/api/
+* Documentación Micronaut
+** https://docs.micronaut.io/latest/guide/index.html
+** https://docs.micronaut.io/latest/api/
+* Documentación Docker
+** https://docs.docker.com/

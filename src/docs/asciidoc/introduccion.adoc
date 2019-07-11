@@ -1,0 +1,82 @@
+= Curso de Desarrollo
+IES Systems <isidoro.trevino@ies-systems.com>
+2019-07-11
+:revnumber: {project-version}
+:example-caption!:
+ifndef::imagesdir[:imagesdir: images]
+ifndef::sourcedir[:sourcedir: ../java]
+
+== Temario
+ 
+* Introducción y preámbulo
+* Java
+** Conceptos básicos
+** Conceptos Java8
+** JVM
+** Pruebas unitarias
+
+== Temario
+
+* Spring
+** Inyección de dependencias
+** Conceptos básicos
+** Configuración
+** Spring MVC
+** Spring Security
+** Configuración para deployments
+** Spring WS
+
+== Temario
+
+* Mybatis
+** Conceptos básicos y configuración
+** Mappers XML
+* Micronaut
+** Conceptos básicos
+** Configuración
+** Servicios REST
+
+== Temario
+
+* Micronaut
+** Websockets
+** Server Sent Events (SSE)
+** Servicios SOAP
+* Arquitectura de siniestros
+** Arquitectura general
+** Manejo básico de contenedores
+** Consul, configuración y diagnóstico
+
+== Descarga de código fuente
+
+https://github.com/isidorotrevino/curso_desarrollo
+
+[source,text]
+----
+git clone https://github.com/isidorotrevino/curso_desarrollo
+----
+
+== Software
+
+=== SDK MAN
+
+* https://sdkman.io/
+
+==== Linux / OSX
+
+[source,text]
+----
+curl -s "https://get.sdkman.io" | bash
+---- 
+
+==== Windows
+
+* Requiere la descarga de Cygwin (https://www.cygwin.com/install.html)
+|===
+| bash | zip | unzip | curl
+|===
+
+=== Eclipse
+
+* Spring Tool Suite (STS): https://spring.io/tools3/sts/all
+* DBeaver: https://dbeaver.io/download/
