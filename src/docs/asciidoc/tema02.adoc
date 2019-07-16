@@ -8,7 +8,83 @@ ifndef::sourcedir[:sourcedir: ../java]
 
 == Conceptos Avanzados Java
 
-=== I/O Streams
+== Annotations
+
+* Proveen información suplementaria sobre un programa
+* No cambian el comportamiento de un programa compilado
+* Ayudan a asociar metadata a elementos del programa
+* Pueden influir en el comportamiento del compilador
+
+=== Annotations
+
+* **Marker annotations:** 
+** No contienen información ni miembros
+** Solo indican la presencia o asuencia del mismo
+
+[source,java]
+----
+@Override
+@Deprecated
+public void metodo()
+----
+
+=== Annotations
+
+* **Single value annotations:**
+** Contienen un solo valor String
+[source,java]
+----
+@Service("clientService")
+public class FakeClientService
+----
+
+=== Annotations
+
+* **Full annotations**
+** Contienen multiples miembros llave/valor
+[source,java]
+----
+@Transactional(isolation=Isolation.READ_COMMITED,readOnly=false)
+public String guardarCliente(Cliente cliente)
+----
+
+== Generics
+
+* Un tipo genérico es una clase o interface que es parametrizada
+en su tipo
+* Permiten a una clase manejarse de una manera general, permitiendo
+limitarla por caso a un uso sobre un tipo específico
+** Facilitan la reutilización de código
+** Ayudan también a disminuir errores en tiempo de ejecución
+
+=== Generics
+
+[source,java]
+----
+public class Contenedor<T>{
+
+	protected T componente;
+	
+	public Contenedor(T valor){
+		this.componente = valor;
+	}
+	
+	public T getComponente(){
+		return T;
+	}
+}
+----
+
+=== Generics
+
+[source,java]
+----
+Contenedor<String> c = new Contenedor<>("HOLA");
+String valor = c.getComponente();
+----
+
+
+== I/O Streams
 
 * Permiten el procesamiento y/o enrutamiento de flujos de datos (Lectura/Escritura) de 
 una manera genérica
@@ -22,17 +98,135 @@ una manera genérica
 ** **Input Stream** -> Leer datos de una fuente
 ** **Output Stream** -> Para escribir datos en un destino
 * Los streams siempre deben ser cerrados
-* Generalmente se requiere
+* Generalmente se requiere procesar excepciones
 
-=== Channels (NIO)
+=== I/O Streams
+
+* Ventajas
+** API usada por multitud de librerías
+** Sencilla de usar
+** Versatil y agnóstica
+* Desventajas
+** **Blocking IO** -> El thread se bloquea mientras 
+espera que el SO termine la operación de IO
+
+=== Ejemplo 1
+
+== Java NIO
+
+* API introducida en Java 1.4
+* Manejo natural de Buffers y Channels
+* Permite monitoreo de eventos
+* **Non Blocking IO** -> Permite que el SO (Kernel)
+procese la operación de IO y el thread continúa su
+operación
+
+=== Channel
+
+* Origen o destino donde se leerán / escribirán
+los datos
+* Bidireccional
+* Siempre escriben / leen hacia un Buffer
+
+=== Buffer
+
+* Bloque de memoria donde se pueden leer y escribir datos
+* Secuencia de uso:
+** Se escriben datos al buffer
+** Se llama buffer.flip()
+** Se leen datos del buffer
+** Se llama buffer.clear() o buffer.compact()
+
+=== Buffer
+
+* Características
+** capacity
+** position
+** limit
+* Al crear un buffer se debe llamar el método allocate
+
+=== Selectors
+
+* Permite escuchar eventos de diferentes Channels
+** Connect
+** Accept
+** Read
+** Write
+
+=== Ejemplo 2
+
+== Interfaces funcionales
+
+* Interfaces que definen un único método abstracto
+* Se recomienda que agreguen el annotation **FunctionalInterface**
+* Pudiera tener otros métodos default
+
+=== Lambdas
+
+* Bloque de código que es tratado como un objeto
+* Se trata de una función anónima
+* En java trabaja para implementar interfaces funcionales
+
+=== Ejemplo 3
 
 === Colecciones
 
+* API estándar de java para manejar grupos de diferentes objetos
+con diferentes objetivos
+* Interfaces unificadas para manipulación consistente
+* Separación entre definición e implementación
+* Métodos de conveniencia
+
 === Listas
+
+* Almacena secuencias de objetos
+* Los elementos pueden ser insertados, obtenidos, iterados y removidos
+* Los elementos están indexados
 
 === Mapas
 
+* Elemento que almacena colecciones de objetos en duplas llave/valor
+* Cada llave liga a un solo valor específico
+* Las llaves no pueden ser nulas
+
 === Sets
+
+* Colección de objetos que impide el almacenamiento de duplicados
+** hashcode y toString
+* En algunos casos pueden ser ordenados (SortedSet)
+* No están indexados
 
 === Collection Streams
 
+* Extensión del framework Collections que permite procesar lotes de datos
+de manera sencilla
+* Permite encadenar series de instrucciones para transformar el 
+flujo de objetos
+** **forEach** -> Itera sobre un stream de objetos (Operación terminal)
+** **map** -> Aplica una función a cada elemento del stream
+** **collect** -> Transforma un stream a una colección (Operación terminal)
+
+=== Collection Streams
+
+* Operadores Stream
+** **filter** -> Decide si un objeto es descartado del flujo
+** **findFirst** -> Devuelve el primer objeto que cumpla con una condición
+** **orElse** -> Si no encuentra ningún elemento, devuelve un valor opcional
+** **peek** -> Invoca una función a un objeto sobre el flujo
+
+=== Collection Streams
+
+* Operadores Stream
+** **sorted** -> Permite ordenar los objetos en el stream
+** **distinct** -> Regresa únicamente objetos diferentes
+** **reduce** -> Ejecuta una función sobre el flujo de objetos para
+devolver un resultado único
+
+
+=== Ejemplo 4
+
+
+=== Práctica
+
+* Implementar la funcionalidad demostrada en el ejemplo 4, pero
+utilizando los métodos tradicionales (sin usar streams)

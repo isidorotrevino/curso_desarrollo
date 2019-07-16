@@ -15,3 +15,40 @@ ifndef::sourcedir[:sourcedir: ../java]
 ** https://docs.micronaut.io/latest/api/
 * Documentación Docker
 ** https://docs.docker.com/
+
+
+== Referencia rápida
+
+=== Streams 
+
+[cols="30,70"]
+|===
+2+| Streams
+
+| Archivos | FileInputStream / FileOutputStream
+| Bytes | ByteArrayInputStream / ByteArrayOutputStream
+| Soporte de buffer | BufferedInputStream / BufferedOutputStream
+| Enrutado | PipedInputStream / PipedOutputStream
+|===
+
+=== Channels
+
+[cols="30,70"]
+|===
+2+| Channels
+
+| Archivos | FileChannel
+| Sockets / Datagramas | DatagramChannel
+| Sockets / Streams | SocketChannel
+|===
+
+=== Buffers
+
+[cols="30,40,30"]
+|===
+3+| Buffers
+
+| ByteBuffer | MappedByteBuffer | CharBuffer
+| DoubleBuffer | FloatBuffer | IntBuffer
+| LongBuffer | ShortBuffer |
+|===

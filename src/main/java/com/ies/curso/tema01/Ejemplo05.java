@@ -34,13 +34,15 @@ public class Ejemplo05 {
 		System.out.println(clase.saludar("ing.", "Juan","Señor de los tacos al pastor"));
 		
 		
+		
 		try {
 			clase.arrojarCheckedException();
-		} catch (IOException e) {
+			clase.arrojarUnCheckedException();
+		} catch (IOException | RuntimeException e) {
 			System.out.println("Procesamos la excepción y nos arrojó "+e.getMessage());
-		}
+		} 
 		
-		clase.arrojarUnCheckedException();
+		
 		
 	}
 	

@@ -1,0 +1,195 @@
+= Curso de Desarrollo
+IES Systems <isidoro.trevino@ies-systems.com>
+2019-07-16
+:revnumber: {project-version}
+:example-caption!:
+ifndef::imagesdir[:imagesdir: images]
+ifndef::sourcedir[:sourcedir: ../java]
+
+== JVM
+
+* Máquina virtual que permite ejecutar bytecode Java
+* Detallada en una especificación
+** Contiene un recolector de basura
+** Verificador de Bytecode
+** Intérprete
+** Just in Time Compiler (JIT)
+
+=== Bytecode
+
+[source,java]
+----
+new com/ies/curso/tema01/Ejemplo02
+dup
+ldc2_w 5.23
+ldc2_w 1.2
+invokespecial com/ies/curso/tema01/Ejemplo02/<init>(DD)V
+astore_1
+aload_1
+invokevirtual com/ies/curso/tema01/Ejemplo02/realizarDivision()Ljava/lang/String;
+astore_2
+getstatic java/lang/System/out Ljava/io/PrintStream;
+new java/lang/StringBuilder
+dup
+invokespecial java/lang/StringBuilder/<init>()V
+ldc "El resultado es "
+invokevirtual java/lang/StringBuilder/append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+aload_2
+invokevirtual java/lang/StringBuilder/append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+invokevirtual java/lang/StringBuilder/toString()Ljava/lang/String;
+invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V
+return
+----
+
+=== Classloader
+
+* Realiza las actividades
+** Loading: Encuentra y carga el tipo binario para un tipo
+** Linking: Verifica, prepara y resuelve
+*** Verificación: Se asegura que el tipo importado sea correcto
+*** Preparación: Asigna memoria para variables de clase y valores default
+*** Resolución: Transforma referencias simbólicas en referencias directas
+
+=== Ejemplo 01
+
+== Classpath
+
+* Es la ruta utilizada por la JVM para encontrar clases y otros recursos
+** Directorio con archivos .class
+** Archivos Jar o Zip
+* Puede existir como:
+** Variable de ambiente (CLASSPATH)
+** Parámetro de ejecución (-classpath, -cp)
+
+=== Agentes
+
+* Es un tipo de Jar especial
+* Utiliza el **Instrumentation API** de la JVM
+* Permite alterar el bytecode existente en la JVM
+* En la vida práctica se usa:
+** Reutilización de código
+** Monitoreo de código
+** Seguridad
+
+== Recursos de ejecución
+
+=== Variables de ambiente
+
+* Variable que existe fuera del contexto de un programa
+* Principalmente provistas por el SO
+* Propiedades Llave/valor
+* Se pueden referir en cualquier momento
+
+=== Variables de ambiente
+
+[source,text]
+----
+#LINUX / OSX
+JAVA_HOME=/home/usuario/jdk
+PATH=$JAVA_HOME/bin:$PATH
+----
+
+[source,text]
+----
+REM WINDOWS
+JAVA_HOME="C:\Archivos de Programa\jdk"
+PATH=%JAVA_HOME%\bin;%PATH%
+----
+
+=== Propiedades de sistema
+
+* Variables almacenadas en la clase System
+* Describen configuraciones del ambiente actual
+** **user.dir** Directorio de ejecución
+** **java.class.path** Classpath actual
+** **os.name** Nombre del SO
+** **os.arch** Arquitectura del SO
+
+=== Ejemplo 02
+
+== Construcción de proyectos
+
+=== Dependencias
+
+* Librerías o módulos externos que proveen funcionalidad
+que se puede reutilizar
+* Pueden tener diferentes alcances (Scopes):
+** Simplemente para compilar
+** Para su uso en tiempo de ejecución
+** Para su uso en pruebas unitarias
+
+=== Dependencias transitivas
+
+* Se trata de dependencias ligadas a la dependencia principal
+* Cada gestor de proyectos utiliza diferentes estrategias
+para trabajarlas
+
+=== Repositorios
+
+* Sistemas encargados de almacenar dependencias
+** MvnRepository
+** JCenter
+* Cuentan con una estructura estándar para una administración
+eficiente
+** GroupId
+** ArtifactId
+** Version
+
+== Gradle
+
+* Herramienta de gestión y construcción de proyectos
+** Estructura estándar
+** Facilita la gestión de dependencias
+* Configuración mediante DSL (Domain Specific Language)
+** Basado en Groovy ( También Kotlin y XML )
+
+=== Gradle
+
+* Funcionalidad mediante plugins
+* Configuración por convención
+
+[source,text]
+----
+$ sdk install gradle 5.2.1
+$ gradle init
+----
+
+=== Gradle
+
+.build.gradle
+[source,groovy]
+----
+plugins {
+    // Apply the java plugin to add support for Java
+    id 'java'
+
+    // Apply the application plugin to add support for building an application
+    id 'application'
+}
+
+repositories {
+    // Use jcenter for resolving your dependencies.
+    // You can declare any Maven/Ivy/file repository here.
+    jcenter()
+}
+
+dependencies {
+    // This dependency is found on compile classpath of this component and consumers.
+    implementation 'com.google.guava:guava:27.0.1-jre'
+
+    // Use JUnit test framework
+    testImplementation 'junit:junit:4.12'
+}
+
+// Define the main class for the application
+mainClassName = 'ext.App'
+----
+
+=== Ejemplo 03
+
+== Práctica
+
+* Crear una aplicación Java que calcule los primeros 10,000 
+números de la serie de Fibonacci
+* Importar la librería Passay (Versión 1.4.0) e implementar
+un ejemplo de regla para validar contraseñas
