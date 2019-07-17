@@ -1,18 +1,41 @@
 = Curso de Desarrollo
 IES Systems <isidoro.trevino@ies-systems.com>
-2019-07-17
+2019-07-18
 :revnumber: {project-version}
 :example-caption!:
 ifndef::imagesdir[:imagesdir: images]
 ifndef::sourcedir[:sourcedir: ../java]
 
-== MyBatis
+== Spring
 
-=== JDBC
+=== Inyección de dependencias
 
-=== Que es
+* También llamado Inversion of Control (IoC)
+* Los objetos son proporcionados por un agente externo en lugar de
+ser creados por el objeto
+* Ayuda a crear arquitecturas modulares y extensibles
+ 
+=== Tipos de Inyección
 
-=== Configuración
+* Setter Injection
+[source,java]
+----
+public void setDependencia(Dependencia variable){
+	this.atributo = variable;
+}
+----
+* Constructor Injection  
+[source,java]
+----
 
-=== Mappers
+protected final Dependencia atributo; 
 
+public Servicio(Dependencia variable){
+	this.atributo = variable;
+}
+----
+
+=== Ejemplo 01
+ 
+=== Spring
+=== Configuración mediante Annotations
