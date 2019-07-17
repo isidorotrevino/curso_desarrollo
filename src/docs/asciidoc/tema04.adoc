@@ -1,0 +1,206 @@
+= Curso de Desarrollo
+IES Systems <isidoro.trevino@ies-systems.com>
+2019-07-17
+:revnumber: {project-version}
+:example-caption!:
+ifndef::imagesdir[:imagesdir: images]
+ifndef::sourcedir[:sourcedir: ../java]
+
+== Pruebas unitarias
+
+* Pruebas a nivel componente o unidad
+* El objetivo es validar que cada unidad
+de software se comporta acorde a lo especificado 
+ 
+=== Jerarquía de pruebas
+
+image::unittesting.jpg[] 
+
+=== Beneficios
+
+* Facilita el mantenimiento de código
+* Ayuda a diseñar mejor
+** Para que una clase pueda ser probada mediante
+pruebas unitarias, se requiere mitigar complejidad
+* El desarrollo es más rápido
+
+=== Consejos generales
+
+* No es necesario crear pruebas para todo
+** Escoger los escenarios con mayor impacto
+* Utilizar información lo más cercana a la realidad
+* Tratar de cubrir todas las rutas de un método
+* Detectar puntos clave donde hay que probar performance
+* Probar, probar, probar, probar, probar, probar
+ 
+=== JUnit 
+
+* Framework que nos permite crear pruebas repetibles
+* Implementación para Java del framework xUnit para 
+realización de pruebas unitarias
+* Configuración mediante annotations
+* El código se ubica en la carpeta **src/test/java** y no
+se integra en los builds finales
+
+=== JUnit
+
+* La clase de pruebas por convención tiene el mismo
+nombre de la clase probada más el sufijo **Test**
+
+[source,java]
+----
+public class ElementoTest{
+
+	@Test
+	public void probarDivision(){
+		...
+	}
+}
+----
+
+=== Configuración en Gradle
+
+.build.gradle
+[source,groovy]
+----
+dependencies {
+	testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.5.0'
+	testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.5.0'
+	testImplementation group: 'org.mockito', name: 'mockito-core', version: '2.28.2'
+	testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '2.28.2'
+}
+
+test {
+	useJUnitPlatform()
+}
+
+----
+
+=== Ejemplo 01
+
+=== Mock Objects
+
+* Ciertas dependencias en objetos dificultan
+las pruebas
+** Requieren conexiones a otros servicios (BD,LDAP,etc)
+** No se puede obtener información confiable
+** No se cuenta con la implementación
+
+=== Mock objects
+
+* Se pueden utilizar objetos simulados
+* Deben implementar el contrato de funcionamiento (Interface)
+* Permiten evitar efectos colaterales provocados
+por las dependencias
+
+=== Mockito
+
+* Framework más maduro para manejo de mocks
+* Provee informe de errores fácil de interpretar
+* Incluído en el top 10 de mejores librerías Java
+
+=== Ejemplo 02
+
+=== Práctica 01
+
+* Implementar pruebas unitarias de las
+prácticas anteriores
+
+== Patrones de diseño
+
+* Soluciones comúnes reutilizables aplicables a 
+un problema común dentro de un contexto determinado
+* Es una plantilla, no un código
+* Mejores prácticas para resolver problemas comúnes
+en el diseño de un sistema
+
+=== Patrones de creación
+
+* Usados para construir objetos de tal manera que
+se puedan desacoplar del sistema que los implementa
+
+=== Singleton
+
+* **Propósito:** Que solo exista una sola instancia
+de un objeto en el sistema
+* **Uso:** Clases de configuración, o que deban
+mantener un estado en todo el sistema
+
+=== Abstract Factory
+
+* **Propósito:** Provee una interface que delega
+la creación a otras clases concretas para devolver
+objetos específicos
+* **Uso:**
+** Cuando la creación de objetos debe ser independiente
+al sistema
+** Para crear diversos objetos de una misma familia
+** Bibliotecas que no expongan detalles de implementación
+
+=== Builder
+
+* **Propósito:** Permite la creación dinámica de objetos
+a partir de algoritmos intercambiables
+* **Uso:**
+** Cuando se requieren diferentes alternativas para crear 
+un objeto
+** Se requiere agregar nueva funcionalidad sin crear un nuevo
+objeto
+** Se necesita control sobre el proceso de creación
+
+=== Patrones estructurales
+
+* Utilizados para manejar estructuras de datos grandes
+entre objetos dispares
+
+=== Facade
+
+* **Propósito:** Permite a un objeto actuar como 
+una entidad de pasaje hacia otro objeto
+* **Uso:** 
+** Se requiere restringir el acceso al objeto original
+** Es necesario agregar funcionalidad previo al acceso
+al objeto original
+
+=== Decorator
+
+* **Propósito:** Permite envolver objetos existentes
+para modificar sus responsabilidades o comportamientos
+* **Uso:** 
+** Cuando el crear subclases es impráctico o imposible
+** Cuando cierta funcionalidad no debe existir en un objeto
+de orden mayor
+** Para desacoplar responsabilidades de ciertos objetos
+
+=== Patrones de comportamiento
+
+* Utilizados para administrar algoritmos, relaciones
+y responsabilidades entre objetos
+
+=== Observer
+
+* **Propósito:** Permite a uno o más objetos
+ser notificados si otros objetos cambian de estado
+* **Uso:**
+** Cuando se requiere realizar un broadcast de mensajes
+** Cuando el cambio de estado de un objeto debe detonar
+comportamiento en otros objetos
+
+=== Chain of Responsibility
+
+* **Propósito:** Permite a un objeto tener la oportunidad
+de manejar una solicitud ligando diversos objetos en cadena
+* **Uso:**
+** Múltiples objetos pueden manejar una solicitud y 
+el manejador no tiene que ser un objeto en específico
+** Una serie de objetos deben poder atender una solicitud
+con un manejador determinado en tiempo de ejecución
+
+=== Práctica
+
+* Buscar e implementar un ejemplo de los 
+siguientes patrones:
+** Factory Method
+** Adapter
+** Composite
+** Visitor
