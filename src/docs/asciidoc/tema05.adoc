@@ -6,9 +6,7 @@ IES Systems <isidoro.trevino@ies-systems.com>
 ifndef::imagesdir[:imagesdir: images]
 ifndef::sourcedir[:sourcedir: ../java]
 
-== Spring
-
-=== Inyección de dependencias
+== Inyección de dependencias
 
 * También llamado Inversion of Control (IoC)
 * Los objetos son proporcionados por un agente externo en lugar de
@@ -37,5 +35,92 @@ public Servicio(Dependencia variable){
 
 === Ejemplo 01
  
+== Lombok
+
+* Herramienta enfocada en disminuir el "código de plomería"
+* Se configura mediante annotations
+** Un agente del compilador genera todo el código que requiramos 
+
+=== Annotations
+
+* **@Getter**, **@Setter** -> Genera getters y setters para los atributos anotados
+* **@ToString** -> Genera método ToString tomando en cuenta los atributos de la clase
+* **@EqualsAndHashCode** -> Implementa los métodos equals y hashCode
+* **@NoArgsConstructor, @RequiredArgsConstructor and @AllArgsConstructor** -> Crea 
+constructores
+
+=== Annotations
+
+* **@Data** -> Genera todo lo anterior
+* **@Builder** -> Genera un builder
+* **@Slf4j** -> Inyecta una instancia del logger Slf4j
+ 
+=== Ejemplo 02 
+ 
+== Spring
+
+* Framework de desarrollo de aplicaciones originalmente fundamentado en 
+el patrón de diseño **Inyección de dependencias**
+* Surgió como una alternativa a las prácticas de Java Enterprise Edition
+que generalmente provocaban mucha complejidad en los proyectos
+* No es un sustituto completo a JEE, sino que puede ser un complemento
+
 === Spring
-=== Configuración mediante Annotations
+
+* Su filosofía es promover arquitecturas que se manejen bajo un principio 
+de alta cohesión y bajo acomplamiento
+* **Alta Cohesión:** Una clase debe enfocarse en implementar métodos relacionados
+con la intención de la clase
+* **Bajo acomplamiento:** Los cambios en una clase no deben impactar a 
+otras clases
+
+=== Spring
+
+* Actualmente debido a su complejidad Spring fue separado en diversos módulos
+acorde a objetivos específicos:
+
+|===
+| Spring Framework | Spring Web Services | Spring Security
+| Spring Batch | Spring Data | Spring Cloud
+3+| ...
+|===
+
+=== Spring Boot
+
+* Proyecto orientado a construir aplicaciones Spring con un mínimo de esfuerzo
+* Configuración por convención
+* Soporte para configurar librerías de 3os.
+* Generador de proyectos en línea:  https://start.spring.io/
+
+=== Ejemplo 03
+
+== Configuración mediante Annotations
+
+* **@Service**, **@Component**, **@Repository**, **@Controller**
+** Annotations que definen "estereotipos"
+** Spring creará una instancia de las clases que declaren esta anotación
+** Facilita la inyección de dependencias
+** Estas instancias se denominan **Spring Beans**
+
+=== Annotations
+
+* **@Autowired:** Cualquier atributo declarado con este annotation tratará
+de ser ligado mediante una implementación con Estereotipo 
+* **@Value:** Permite asignar valores cargados de archivos de configuración
+* **@Configuration:** Las clases anotadas con este tipo tendrán la posibilidad
+de crear nuevos Spring Beans o ejecutar código de configuración / inicialización
+
+=== Annotations
+
+* **@Bean** Los objetos devueltos por un método declarado con esta clase serán 
+manejados por Spring como Spring Beans
+* **@Qualifier:** Se usa en conjunto con @Autowired, en el caso que existan múltiples
+instancias de un mismo tipo de bean, para poder determinar cual será inyectada
+
+=== Annotations
+
+* **@ConditionalOnBean**, **@ConditionalOnProperty**, **@ConditionalOnresource**: 
+Permite definir si determinado bean será creado o no
+
+=== Ejemplo 04
+
