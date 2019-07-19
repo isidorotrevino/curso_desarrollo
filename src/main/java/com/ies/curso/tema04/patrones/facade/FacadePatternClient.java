@@ -39,7 +39,7 @@ public class FacadePatternClient {
 				return;
 			}
 
-		} while (choice != 4);
+		} while (choice != 3);
 
 	}
 

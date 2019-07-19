@@ -4,15 +4,23 @@ public class Main {
 
 	public static void main(String[] args) {
 		Pizza.Builder builder = new Pizza.Builder();
-		builder = builder.nombre("Hawaiiana");
-		builder = builder.valor(25f);
-		builder = builder.tamaño("Grande");
+		builder = builder.nombre("Hawaiiana")
+				.valor(25f)
+				.tamaño("Grande");
 		Pizza hawaiiana = builder.build();
 		
-		builder = new Pizza.Builder();
-		builder = builder.nombre("Pepperoni");
-		builder = builder.tamaño("Grande");
-		Pizza promocion = builder.build();
+		System.out.println("HAWAIIANA= "+hawaiiana);
+		
+		Pizza promocion = new Pizza.Builder()
+				.nombre("Pepperoni")
+				.tamaño("Grande")
+				.build();
+		
+//		Pizza sorpresa = new Pizza.Builder()
+//				.tamaño("Pequeña")
+//				.valor(15).build();
+//		
+		System.out.println("PROMOCION "+promocion.toString());
 	}
 	
 }

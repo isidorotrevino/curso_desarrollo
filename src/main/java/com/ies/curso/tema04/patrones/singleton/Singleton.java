@@ -9,6 +9,9 @@ public class Singleton {
 	}
 
 	public static Singleton getElSingleton() {
+		//Codigo fuera del synchronized
+		//....
+		//....
 		synchronized (elSingleton) {
 			if (singletonDisponible) {
 				if (elSingleton == null) {

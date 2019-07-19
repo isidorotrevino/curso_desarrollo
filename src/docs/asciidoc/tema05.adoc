@@ -55,6 +55,11 @@ constructores
 * **@Builder** -> Genera un builder
 * **@Slf4j** -> Inyecta una instancia del logger Slf4j
  
+=== Integración con IDE's
+
+* Revisar y seguir instrucciones en sitio:
+** https://projectlombok.org/setup/eclipse 
+ 
 === Ejemplo 02 
  
 == Spring
