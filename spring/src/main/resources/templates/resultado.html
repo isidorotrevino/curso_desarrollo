@@ -1,0 +1,13 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Formulario</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<h1>Result</h1>
+    <p th:text="'telefono: ' + ${informacion.telefono}" />
+    <p th:text="'domicilio: ' + ${informacion.direccion}" />
+    <a href="/saludar">Enviar otro mensaje</a>
+</body>
+</html>

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.ies.curso.spring.tema05.ejemplo04.dto.RegistroContable;
 import com.ies.curso.spring.tema05.ejemplo04.persistence.ContabilidadDao;
-import com.ies.curso.spring.tema05.ejemplo04.service.ContabilidadService;
+import com.ies.curso.spring.tema05.ejemplo04.services.ContabilidadService;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;

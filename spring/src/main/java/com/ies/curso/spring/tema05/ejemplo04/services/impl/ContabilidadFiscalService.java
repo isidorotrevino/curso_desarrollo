@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.ies.curso.spring.tema05.ejemplo04.dto.RegistroContable;
-import com.ies.curso.spring.tema05.ejemplo04.service.ContabilidadService;
+import com.ies.curso.spring.tema05.ejemplo04.services.ContabilidadService;
 
 @Service("contabilidadFiscal")
 public class ContabilidadFiscalService implements ContabilidadService {

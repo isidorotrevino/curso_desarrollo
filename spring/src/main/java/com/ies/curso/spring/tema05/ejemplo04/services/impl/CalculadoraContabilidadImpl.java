@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.ies.curso.spring.tema05.ejemplo04.dto.RegistroContable;
-import com.ies.curso.spring.tema05.ejemplo04.service.CalculadoraContabilidad;
-import com.ies.curso.spring.tema05.ejemplo04.service.ContabilidadService;
+import com.ies.curso.spring.tema05.ejemplo04.services.CalculadoraContabilidad;
+import com.ies.curso.spring.tema05.ejemplo04.services.ContabilidadService;
 
 import lombok.extern.slf4j.Slf4j;
 

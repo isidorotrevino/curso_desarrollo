@@ -8,7 +8,7 @@ import org.springframework.context.ApplicationContext;
 
 import com.ies.curso.spring.tema05.ejemplo03.Saludador;
 import com.ies.curso.spring.tema05.ejemplo04.config.ContabilidadConfig;
-import com.ies.curso.spring.tema05.ejemplo04.service.CalculadoraContabilidad;
+import com.ies.curso.spring.tema05.ejemplo04.services.CalculadoraContabilidad;
 
 import lombok.extern.slf4j.Slf4j;
 
