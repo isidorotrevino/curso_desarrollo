@@ -29,6 +29,17 @@ public class ServicioControl {
 		}
 	}
 	
+	/**
+	 * public void venderProductos(String[] productos)
+	 * -> venderProductos(new String[]{"string1","string2"});
+	 * 
+	 * public void venderProductos(String... productos)
+	 * -> venderProductos("string1","string2")
+	 * -> venderProductos("string1")
+	 * -> venderProductos()
+	 * 
+	 * @param productos
+	 */
 	public void venderProductos(String... productos) {
 		for(String producto : productos) {
 			this.servicioAdministracion.registrarVenta(producto);

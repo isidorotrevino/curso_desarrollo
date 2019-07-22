@@ -1,20 +1,218 @@
 = Curso de Desarrollo
 IES Systems <isidoro.trevino@ies-systems.com>
-2019-07-19
+2019-07-22
 :revnumber: {project-version}
 :example-caption!:
 ifndef::imagesdir[:imagesdir: images]
 ifndef::sourcedir[:sourcedir: ../java]
 
+== Comunicación HTTP 
 
+* Protocolo sin mantenimiento de estado (Stateless)
+* Protocolo de aplicación
 
-== MyBatis
+image::osi_layers.jpg[]
 
-=== JDBC
+=== Request / Response
 
-=== Que es
+* Métodos más básicos para usados por las 
+computadoras para comunicarse
 
-=== Configuración
+image::Request-Response.jpg[]
 
-=== Mappers
+=== Identificación del destino
 
+* Mediante un URL (Universal Resource Locator)
+
+[source,text]
+----
+            userinfo          host        port
+        ┌───────┴───────┐ ┌────┴────────┐ ┌┴┐
+ http://john.doe:password@www.example.com:123/forum/questions/?tag=networking&order=newest#top
+ └─┬─┘ └───────────┬────────────────────────┘└─┬─────────────┘└────────┬──────────────────┘└┬─┘
+ scheme         authority                      path                  query             fragment
+----
+
+=== Request
+
+* Solicitud enviada al servidor
+** <Método> <Ruta> <Versión>
+** Headers
+** Línea en blanco
+** Cuerpo
+
+[source,text]
+----
+GET / HTTP/1.1
+Accept: text/html
+----
+
+=== Métodos Request
+
+[frame="all",cols="20,40,20,20"]
+|===
+| Método | Desc. | Cuerpo | Resp. Cpo. 
+ 
+| GET | Consulta de info. | | x
+| HEAD | Solicitar headers | |
+| POST | Envío de info.  | x | x
+| PUT | Guardar info. | x | x
+|===
+
+=== Métodos Request
+
+[frame="all",cols="20,40,20,20"]
+|===
+| Método | Desc. | Cuerpo | Resp. Cpo. 
+
+| DELETE | Eliminar info. | Opc. | x
+| TRACE | Devuelve la petición original |  | x
+| OPTIONS | Solicita info. sobre el servidor | Opc. | x
+| PATCH | Solicita modificación parcial |x | x
+|===
+
+=== Request Headers
+
+* Elementos llave/valor que describen información
+adicional de la solicitud enviada
+* Existen headers Standard pero se pueden crear
+headers personalizados
+* Es responsabilidad del servidor procesarlos
+
+=== Request Headers
+
+* **Accept:** Tipo de contenido aceptado (MIME)
+* **Accept-Encoding:** Si acepta compresión
+* **Authorization:** Autenticación HTTP-Basic
+* **Content-Type:** Tipo MIME del cuerpo enviado
+* **User-Agent:** Datos del agente (navegador/cliente)
+
+=== Request Headers
+
+* **Host:** Nombre del servidor destino
+* **Referer:** Ubicación actual
+* **X-Requested-With:** Sirve para identificar transacciones
+AJAX
+* **Cookie:** Cookie HTTP
+
+=== Response
+
+* Respuesta devuelta por el servidor
+** Línea de estado (Código)
+** Headers
+** Línea en blanco
+** Cuerpo de la respuesta
+
+=== Response Codes
+
+* **1xx:** Respuesta informativa (solo indica que 
+se recibió el mensaje)
+* **2xx:** Éxito
+* **3xx:** Redirección
+* **4xx:** Error de parte del cliente
+* **5xx:** Error del lado del servidor 
+
+=== Response Codes
+
+* **200:** OK
+* **201:** CREATED - La operación generó un nuevo recurso
+* **202:** ACCEPTED - La transacción fue válida pero no ha terminado
+* **301:** MOVED PERMANENTLY - El recurso buscado se encuentra en otro lugar
+* **302:** MOVED TEMPORARILY - Se debe repetir la petición para obtener
+los cambios
+
+=== Response Codes
+
+* **400:** BAD REQUEST - El servidor no puede procesar la petición como se envió
+* **401:** UNAUTHORIZED - Se requiere realizar un login para entrar
+* **403:** FORBIDDEN - No se tiene el permiso para invocar la operación
+* **404:** NOT FOUND - El recurso no existe
+* **405:** METHOD NOT ALLOWED - El método HTTP usado no es válido
+
+=== Response Codes
+
+* **500:** INTERNAL SERVER ERROR - Ocurrió un error del lado del servidor
+* **503:** SERVICE UNAVAILABLE - El servidor o una porción de él se encuentra caído
+* **504:** GATEWAY TIMEOUT - Un servidor intermedio no responde
+
+=== Session
+
+* El protocolo HTTP no guarda estados
+* Se han implementado alternativas para identificar si una serie de peticiones están
+relacionadas:
+** Del lado del cliente
+*** Cookies
+*** Variable (Obsoleto)
+
+== Spring MVC
+
+* Componente de SpringFramework orientado
+a gestionar aplicaciones Web mediante el patrón MVC:
+** **Model:** Estructura de información a manipular
+** **View:** Representación de la información
+** **Controller:** Integra y maneja la interacción de 
+la vista para modificar/procesar el modelo
+
+=== Patrón MVC
+
+image::mvc.png[]
+
+=== Ciclo Request Response 
+
+image::mvc2.png[]
+
+=== Controller
+
+* SpringBean anotado con **@Controller**
+* Cuenta con métodos anotados con el annotation **@RequestMapping**
+** Parámetros y/o objeto model -> Elementos enviados desde el request
+** Devuelve String -> Nombre de la vista
+** Devuelve Objeto -> Resultado en si (puede transformarse posteriormente)
+
+=== Ejemplo 01
+
+=== Form Binding
+
+* Spring cuenta con mecanismos para procesar formularios HTML
+** Binding
+** Validation
+
+== REST
+
+* Representational State Transfer
+* Patrón de arquitectura que define una serie de reglas 
+para la creación de Servicios Web
+* Permiten la interoperabilidad entre diferentes sistemas
+* Operaciones sin estado (Stateless)
+
+=== Restricciones
+
+* **Arquitectura Cliente / Servidor**
+* **Ausencia de Estado (Statelessness)** -> Toda la información
+en la petición debe de contenerse en la solicitud
+* **Cacheability** -> La respuesta debe poder indicar si debe
+almacenarse en Caché o no
+
+=== Restricciones
+
+* **Sistema por capas (Layered System)** -> Un cliente no debe
+poder detectar si está conectándose directamente al servidor o por
+medio de otros equipos
+* **Interface uniforme** -> Simplifica y desacopla la arquitectura 
+
+=== Web Services
+
+* Servicios ejecutados a través de la web (HTTP)
+* Si se aplican los principios REST tendremos una API RESTful
+** URI base
+** Uso de métodos HTTP estándar
+** Consumo de un tipo de media determinado
+
+=== Postman
+
+* Herramienta para construcción y prueba de
+servicios REST
+* Fácil de utilizar
+* Permite centralizar proyectos de pruebahttps://www.getpostman.com/
+
+=== Ejemplo 02

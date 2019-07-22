@@ -1,7 +1,9 @@
 package com.ies.curso.spring.tema05.ejemplo04.dto;
 
+
 public class RegistroContable {
 
+//	@JsonProperty(value = "cuenta-contable")
 	protected String cuenta;
 	protected Double cargo;
 	protected Double abono;

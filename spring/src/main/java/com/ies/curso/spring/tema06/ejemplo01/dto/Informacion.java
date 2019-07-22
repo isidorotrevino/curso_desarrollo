@@ -16,4 +16,5 @@ public class Informacion {
 	@NotNull
 	@NotBlank
 	protected String direccion;
+	
 }

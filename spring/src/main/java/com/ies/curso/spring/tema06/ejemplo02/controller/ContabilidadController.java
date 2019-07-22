@@ -1,7 +1,10 @@
 package com.ies.curso.spring.tema06.ejemplo02.controller;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -37,5 +40,11 @@ public class ContabilidadController {
 	@DeleteMapping(path = "/",produces = "application/json")
 	public Resultado eliminarRegistroContable(@RequestBody RegistroContable registro) {
 		return new Resultado(5l,true,"Registro eliminado");
+	}
+	
+	@GetMapping(path="/descargarBinario",produces="application/octet-stream")
+	public void devolverBinario(HttpServletResponse response) throws IOException {
+		response.addHeader("content-disposition", "attachment; filename=\"reporte.xls\"");
+		response.getOutputStream().write(new byte[] {});
 	}
 }

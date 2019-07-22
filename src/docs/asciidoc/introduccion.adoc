@@ -22,9 +22,10 @@ ifndef::sourcedir[:sourcedir: ../java]
 ** Conceptos básicos
 ** Configuración
 ** Spring MVC
+** Spring WS
 ** Spring Security
 ** Configuración para deployments
-** Spring WS
+
 
 == Temario
 
