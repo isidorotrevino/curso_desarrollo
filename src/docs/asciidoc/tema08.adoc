@@ -1,9 +1,114 @@
+= Curso de Desarrollo
+IES Systems <isidoro.trevino@ies-systems.com>
+2019-07-24
+:revnumber: {project-version}
+:example-caption!:
+ifndef::imagesdir[:imagesdir: images]
+ifndef::sourcedir[:sourcedir: ../java]
+
+== Consumo de WS SOAP
+
+* Spring WS integra también clases para el 
+consumo de servicios SOAP externos
+** WebServiceGatewaySupport
+*** Clase abstracta
+
+=== Ejemplo 01
+
+== Servicios asíncronos
+
+* Existen escenarios donde es mejor realizar
+tareas que impacten el performance en un hilo 
+en segundo plano
+* Spring provee la capacidad de manejar threads
+asíncronos de manera declarativa
+* **Async**
+
+=== Ejemplo 02
+
 == MyBatis
+
+* Framework de persistencia que desacopla el código
+java del código SQL
+* Patrón de arquitectura -> **SQL Mapper**
+* Código SQL almacenado en archivos XML
+
+=== MyBatis
+
+* Permite invocación de:
+** Store Procedures
+** Views
+** Funciones
+* Soporta cache
+* Mapea métodos java hacia instrucciones SQL
+
 
 === JDBC
 
-=== Que es
+* Java Database Connectivity
+* Parte del JDK
+* Define interfaces que especifican como se 
+debe interactuar con bases de datos
+* Los "Drivers" implementan la funcionalidad
 
-=== Configuración
+=== JDBC
+
+* JDBC 4.x (4.2 -> JSE 8 / 4.3 -> JSE 9)
+* Concepto de **PreparedStatement**
+
+=== H2
+
+* Base de datos relacional (RDBMS) implementada en java
+* Ultra ligera (2.1MB)
+* Ejecución embebida
+* Servidor standalone
+
+=== H2
+
+* Modos de compatibilidad (Mysql, Postgres, Oracle, etc)
+* Soporte de Stored Procedures (Clases Java)
+* Consola web
+
+=== Mybatis - Configuración
+
+* SpringBoot provee autoconfiguradores
+** **Pool de Conexiones** -> HikariCP 
+* Se complementa en el archivo **application.properties**
+
+|===
+| mybatis.mapper-locations | spring.datasource.url
+| spring.datasource.password | spring.datasource.username
+|===
+=== Mappers
+
+* Se ligan con una interface java mediante el 
+annotation **@Mapper**
+* Se definen los alias de los parámetros mediante el
+annotation **@Param**
+* El mapper xml debe indicar un **namespace** equivalente
+al nombre de la interface (incluyendo package)
 
 === Mappers
+
+* Pueden definir operaciones de actualización
+** insert
+** update
+** delete
+* Operaciones de consulta
+** select
+* Mapeo especializado (opcional) hacia objetos java
+** resultMap
+
+=== Ejemplo 03
+
+=== Práctica
+
+* Crear un sistema de inventarios con las 
+siguientes características:
+** Persistencia en Base de Datos
+** Altas / Bajas y Cambios de catálogo de 
+productos
+*** Exponerlos como servicios REST
+** ABC de inventario de productos
+*** Exponerlos como servicios SOAP
+** Hacer pruebas unitarias / integrales
