@@ -6,23 +6,123 @@ IES Systems <isidoro.trevino@ies-systems.com>
 ifndef::imagesdir[:imagesdir: images]
 ifndef::sourcedir[:sourcedir: ../java]
 
-== Spring WS
+== Spring REST / Pruebas unitarias/integrales
 
-=== JAX - B
+* Componentes adicionales enfocados en pruebas web
+** **MockMvc:** Utilerías de prueba para controllers
+** **@InjectMock:** Parte de Mockito, permite inyectar
+de manera automática los Mocks generados como dependencias
+** **MockMvcRequestBuilders:** Construye "requests"
+** **MockMvcResultMatchers:** Ayuda a validar resultados
+
+=== MockMvc
+
+* Sigue el patrón builder
+** **perform:** Ejecuta una acción
+** **andDo:** Encadena una acción
+** **andExpect:** Evalúa un resultado
+
+=== MockMvcResultMatchers
+
+* **print():** Manda resultado a consola
+* **status():** Devuelve el código de estado
+* **content():** Devuelve el contenido del response
+
+=== Pruebas de integración
+
+* Actividades para probar módulos o grupos de módulos
+* Es válido usar mocks para determinados elementos
+* Es recomendable ejecutarlos ya que se tengan pruebas 
+unitarias maduras
+
+=== Pruebas de integración
+
+* Existen herramientas de apoyo:
+** **Apache HttpComponents** (https://hc.apache.org/)
+** **Postman**
+** **Selenium** *
+** **JMeter** *
+
+=== Ejemplo 02 y 03 (Tema 6)
+
+=== Invocación de operaciones REST
+
+* Spring Boot ofrece una herramienta para
+invocación de servicios REST:
+** **RestTemplate**
+
+=== Ejemplo 04
+
+== TEMA 7 - Spring WS
+
+=== SOAP
+
+* Simple Object Acccess Protocol
+* Especificación para el intercambio de 
+información estructurada
+* Basado en estructura XML
+* Diseñado para viajar por HTTP o SMTP
+
+=== SOAP
+
+* Envelope -> Define la estructura
+** Header
+** Body
+** Fault
+* Reglas de codificación para tipos de dato
+* Convención para representar las llamadas a
+métodos o procedimientos
+
+=== WSDL
+
+* Web Services Description Language
+* Se utiliza para describir la funcionalidad
+ofrecida por un Web Service
+* Es un análogo a la definición de tipos de 
+un lenguaje de programación
+
+=== WSDL
+
+* **Service:** Set de funciones expuestas en protocolos Web
+* **Port:** La dirección del endpoint
+* **Binding:** Define el tipo de ligado
+* **PortType:** Define las operaciones, y sus mensajes
+* **Operation:** Define las acciones SOAP
+
+=== JAX-B
+
+* Java Architecture for XML Binding
+* Permite mapear clases a sus representaciones en XML
+* A partir de Java 11 dejó de ser parte del JDK
+** Se integró  Jakarta EE
+* Generalmente se utiliza como una herramienta externa
+
+=== Ejemplo 01 (Plugin Jaxb)
+
+=== Ejemplo 02 (Annotations manuales)
+
+=== Spring WS
+
+* Módulo que permite exponer Servicios SOAP 
+"Contract First"
+* Facilita la transformación entre Java y 
+mensajes SOAP (Marshalling)
+* Configurado automático con Spring Boot
 
 === Endpoints
 
-=== Configuración
+* **@Endpoint** -> Expone una clase como un
+endpoint SOAP
+* **@PayloadRoot** -> Indica la operación a exponer
+* **@RequestPayload** -> Convierte la solicitud XML
+en el objeto anotado
+* **@ResponsePayload** -> Indica que el resultado
+debe convertirse en una respuesta SOAP
+
+=== Ejemplo 03
 
 === SOAP UI
 
-== MyBatis
-
-=== JDBC
-
-=== Que es
-
-=== Configuración
-
-=== Mappers
+* Herramienta para probar WebServices
+* Versión comunitaria: https://www.soapui.org/downloads/soapui.html
 

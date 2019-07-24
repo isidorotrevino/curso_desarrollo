@@ -213,6 +213,7 @@ medio de otros equipos
 * Herramienta para construcción y prueba de
 servicios REST
 * Fácil de utilizar
-* Permite centralizar proyectos de pruebahttps://www.getpostman.com/
+* Permite centralizar proyectos de prueba
+* https://www.getpostman.com/
 
 === Ejemplo 02
