@@ -90,5 +90,10 @@ dependencies {
 	
 	//JAXB
 	jaxb("org.glassfish.jaxb:jaxb-xjc:2.2.11")
+	
+	//MYBATIS
+	implementation group: 'org.mybatis.spring.boot', name: 'mybatis-spring-boot-starter', version: '2.1.0'
+	implementation group: 'com.h2database', name: 'h2', version: '1.4.199'
+	
 }
 

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ies.curso.spring.tema08.ejemplo03.persistence.ProductoMapper">
+
+	<update id="crearSecuenciaProducto">
+		CREATE SEQUENCE seq_producto
+	</update>
+
+	<update id="crearTablaProducto">
+		CREATE TABLE producto (
+			id INT,
+			precio DOUBLE,
+			nombre TEXT
+		)
+	</update>
+	
+	<insert id="insertarProducto">
+		<selectKey 
+			resultType="int"
+			keyProperty="id" order="BEFORE">
+			SELECT nextval('seq_producto')</selectKey>
+		INSERT INTO producto(id,precio,nombre)
+		VALUES (#{id},#{p.precio},#{p.nombre})
+	</insert>
+	
+	<resultMap type="com.ies.curso.spring.tema08.ejemplo03.dto.Producto" 
+		id="productoResult">
+		<id column="id" property="id" />
+		<result column="columna1" property="nombre"/>
+		<result column="columna2" property="precio"/>	
+	</resultMap>
+	
+	<select id="obtenerProducto" resultMap="productoResult">
+		SELECT id, nombre as columna1,
+		precio as columna2
+		FROM producto
+		WHERE precio &gt;= #{precioMinimo}
+		<if test="nombre!=null">
+			AND nombre = #{nombre}
+		</if>
+	</select>
+
+</mapper>
