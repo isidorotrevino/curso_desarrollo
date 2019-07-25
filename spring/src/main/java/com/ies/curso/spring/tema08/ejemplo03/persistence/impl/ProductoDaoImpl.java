@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.ibatis.jdbc.SqlRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,10 +49,12 @@ public class ProductoDaoImpl implements ProductoMapper {
 	}
 	
 	@PostConstruct
+	@Transactional
 	protected void init() {
 		crearSecuenciaProducto();
 		crearTablaProducto();
 		insertarProductosPrueba(100);
+		
 	}
 
 	@Override

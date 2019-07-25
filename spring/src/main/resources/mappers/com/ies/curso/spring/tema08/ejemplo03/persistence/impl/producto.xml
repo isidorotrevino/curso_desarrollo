@@ -27,18 +27,27 @@
 	<resultMap type="com.ies.curso.spring.tema08.ejemplo03.dto.Producto" 
 		id="productoResult">
 		<id column="id" property="id" />
-		<result column="columna1" property="nombre"/>
+		<result column="columna1" property="nombre"  /><!-- GIS -->
 		<result column="columna2" property="precio"/>	
 	</resultMap>
 	
 	<select id="obtenerProducto" resultMap="productoResult">
-		SELECT id, nombre as columna1,
+<!-- 	<select id="obtenerProducto" resultType="com.ies.curso.spring.tema08.ejemplo03.dto.Producto"> -->
+		SELECT id, 
+		nombre as columna1,
 		precio as columna2
 		FROM producto
 		WHERE precio &gt;= #{precioMinimo}
 		<if test="nombre!=null">
-			AND nombre = #{nombre}
+			
+			AND nombre LIKE 'Producto${nombre}%'
 		</if>
+		<include refid="miConsultaGenerica"></include>
+		
 	</select>
-
+	<!-- <foreach collection="nombres" open="AND nombre IN ("
+			separator="," close=") " item="nombre">#{nombre}</foreach>
+	<sql id="miConsultaGenerica">
+	,,,,,
+	</sql>-->
 </mapper>

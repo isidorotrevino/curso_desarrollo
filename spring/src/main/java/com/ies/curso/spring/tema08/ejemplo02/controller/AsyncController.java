@@ -10,8 +10,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ies.curso.spring.tema08.ejemplo02.service.AsyncService;
 
+import lombok.extern.slf4j.Slf4j;
+
 @RestController()
 @RequestMapping("/async")
+@Slf4j
 public class AsyncController {
 
 	@Autowired
@@ -26,6 +29,7 @@ public class AsyncController {
 
 	@GetMapping(path = "/ex", produces = "application/json")
 	public Map<String, Object> invocarAsyncException() {
+		log.info("Thread del controller {}",Thread.currentThread().getName());
 		Map<String, Object> resultado = Collections.singletonMap("exito", "true");
 		asyncService.metodoAsincrono(true);
 		return resultado;

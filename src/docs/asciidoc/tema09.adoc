@@ -1,0 +1,187 @@
+= Curso de Desarrollo
+IES Systems <isidoro.trevino@ies-systems.com>
+2019-07-25
+:revnumber: {project-version}
+:example-caption!:
+ifndef::imagesdir[:imagesdir: images]
+ifndef::sourcedir[:sourcedir: ../java]
+
+== Software Security
+
+* Actividad proactiva
+* Involucra todas las fases del ciclo de 
+vida del desarrollo de software
+* Software security != Application Security
+
+=== Software security
+
+* Las aplicaciones son enlaces entre la información
+y el usuario
+* El software no reconoce la sensibilidad o 
+confidencialidad de la información
+* Software security ->  Gestiona actividades /
+incidentes en las fases de pre-despliegue
+* Application security -> Gestiona actividades /
+incidentes en las fases de post-despliegue
+
+=== Actividades pre-despliegue
+
+* Diseño de software seguro
+* Guías y buenas prácticas para los desarrolladores
+* Procedimientos y estándares para configuración de
+seguridad
+* Codificación segura que siga las guías
+
+=== Actividades pre-despliegue
+
+* Estrategias de validación de codificación y 
+entrada de datos
+* Autenticación de usuarios
+* Administración de sesión de usuarios
+* Control de acceso a funciones
+
+=== Actividades pre-despliegue
+
+* Estrategias de criptografía para asegurar datos
+en tránsito y persistidos
+* Validación de componentes de terceros
+* Identificación y mitigación de defectos
+en diseño y arquitectura de software
+
+=== Actividades post-despliegue
+
+* Pruebas de seguridad post-despliegue
+* Detección de fallas en la configuración del ambiente
+* Detección de código malicioso
+* Parches/Upgrades
+* Filtrado IP
+* Monitoreo de programas
+
+== Vulnerabilidades
+
+* Se priorizan con base en:
+** **Explotabilidad** -> ¿Qué tan fácil es vulnerar
+la seguridad?
+** **Detectabilidad** -> ¿Qué tan simple es detectar
+el riesgo?
+** **Impacto o daño** -> ¿Qué tanto daño se genera si la
+vulnerabilidad se expone o ataca?
+
+=== Vulnerabilidades
+
+image::exploits_of_a_mom.png[]
+
+=== SQL Injection
+
+* Permite al atacante alterar el SQL de backend manipulando
+la información de usuario
+* Objetos vulnerables
+** Campos de entrada
+** URL's
+* Ejemplo:
+
+[source,text]
+----
+http://demo.testfire.net/login.jsp
+Usuario: sjones
+Password: 1=1' or pass123 
+SELECT * FROM Users WHERE User_Name = sjones AND 
+Password = 1=1' or pass123; 
+----
+
+=== Cross site scripting (XSS)
+
+* Permite inyectar código script que se ejecuta en 
+el sitio del lado del cliente
+* Permite robar cookies, alterar sitios web y
+correr malware
+* Objetos vulnerables
+** Campos de entrada
+** URL's
+[source,text]
+----
+http://demo.testfire.net/search.aspx?txtSearch=<iframe> 
+<src = http://google.com width = 500 height 500></iframe> 
+----
+
+=== Autenticación rota
+
+* Cuando se tiene un mal manejo de cookies / id's de session
+* Objetos vulnerables:
+
+|===
+| Session ID's expuestos | Session ID's sin cambios
+| No se implementan timeouts | La sesión puede ser reutilizada
+|===
+
+[source,text]
+----
+http://Examples.com/sale/saleitems;jsessionid=2P0OC2oJM0DPXSNQPLME34SERTBG/dest=Maldives
+----
+
+=== Insecure Direct Object References
+
+* Cuando se expone a la web información sensible del servidor:
+** Configuración de base de datos
+** Estructura de archivos
+** Llaves primarias
+
+[source,text]
+----
+http://www.vulnerablesite.com/userid=123 Se cambia a 
+http://www.vulnerablesite.com/userid=124 
+----
+
+=== Cross Site Request Forgery (CSRF)
+
+* Aprovecha un navegador con una sesión iniciada 
+para enviar un HTTP Request falso, que incluya 
+información sensible a un sitio vulnerable
+* Elementos vulnerables:
+** Formularios de usuario
+** Sitios bancarios
+
+=== Vulnerabilidades en configuración del servidor
+
+* Cuando el servidor expone información acerca de
+los frameworks, versiones, SO, etc que está utilizando
+* O cuando mantiene información 
+
+=== Almacenamiento inseguro
+
+* Cuando la información sensible no es almacenada con 
+las medidas de seguridad adecuadas
+* Estrategias de mitigación:
+** Hashing de contraseñas
+** Cifrado de información sensible
+
+=== Acceso mediante URL's no protegidas
+
+* Cuando el ruteo de un sistema es predecible y la
+aplicación no realiza las validaciones de seguridad adecuadas
+
+[source,text]
+----
+A partir del sitio http://www.vulnerablsite.com 
+el atacante teclea http://www.vulnerablesite.com/admin
+y con ello accede al módulo de administración 
+----
+
+=== Insuficiente protección de la capa de transporte
+
+* Cuando se intercambia información sensible a través de la
+red por medio de un canal no seguro
+* Objetos vulnerables
+** Cualquier dato que se envíe por la red
+
+=== Redirects no validados
+
+* La aplicación usa métodos para realizar redirecciones
+a otros sitios de una manera insegura
+
+[source,text]
+----
+http://www.vulnerablesite.com/login.aspx?redirectURL=ownsite.com
+Cambiarlo por
+http://www.vulnerablesite.com/login.aspx?redirectURL=rateros.com
+----

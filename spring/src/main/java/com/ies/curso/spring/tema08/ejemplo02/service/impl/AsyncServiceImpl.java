@@ -15,6 +15,7 @@ public class AsyncServiceImpl implements AsyncService {
 	@Async
 	public void metodoAsincrono(boolean lanzarExcepcion) {
 		log.info("Comenzando método asíncrono");
+		log.info("Thread del método {}",Thread.currentThread().getName());
 		for(int i=0;i<10;i++) {
 			log.info("Invocando método, iteración {}",i);
 			try {
