@@ -1,0 +1,149 @@
+= Curso de Desarrollo
+IES Systems <isidoro.trevino@ies-systems.com>
+2019-07-26
+:revnumber: {project-version}
+:example-caption!:
+ifndef::imagesdir[:imagesdir: images]
+ifndef::sourcedir[:sourcedir: ../java]
+
+== Spring security
+
+* Framework enfocado en el endurecimiento de seguridad
+de aplicaciones
+** Autenticación
+** Autorización
+** ACL
+
+=== Web-based security
+
+* Basado en Servlet filters
+
+image::servlet_chain.jpg[]
+
+=== Autenticación
+
+* Proceso de verificación de la identidad de una persona
+o dispositivo
+** Usuario / Contraseña
+** Certificado X.509
+** Token JWT
+
+=== Autenticación
+
+* **AuthenticationProvider** -> Elemento central, coordina
+los procesos de autenticación
+* **PasswordEncoder** -> Provee rutinas de cifrado de contraseñas
+* **UserDetailsService** -> Interface con el contrato de funcionamiento
+para obtener usuarios y sus características
+* **UserDetails** -> Interface que define las características y
+atributos de un usuario
+
+=== Autenticación
+
+* **ProviderManager** -> Administra uno o varios proveedores
+de autenticación
+* **AuthenticationFilter** -> Intercepta las llamadas
+para verificar si es necesario invocar un proceso de autenticación
+
+=== Autenticación
+
+image::spring_auth.png[]
+
+== Autenticación mediante usuario y contraseña
+
+* Definir rutas a asegurar
+* Definir nivel de autorización*
+* Definir modo de autenticación
+** Form
+** Http Basic
+
+=== Ejemplo 01
+
+== JWT
+
+* Json Web Token
+* Estándar RFC 7519
+* Permite transmitir información segura entre dos
+entidades mediante un objeto JSON
+* Cifrado mediante:
+** HMAC
+** Par de llaves RSa
+
+=== JWT
+
+* Puede ser transmitido mediante:
+** Parametro del POST
+** URL
+** Header HTTP
+* **Auto-contenido**
+
+=== ¿Cuándo usarse?
+
+* Autenticación
+* Intercambio de información
+** Firma digital
+
+=== Estructura
+
+* Tres partes separadas por (.)
+** Header
+** Payload
+** Signature
+
+=== Header
+
+* Contiene dos partes:
+
+[source,javascript]
+----
+{
+  "alg": "HS256",
+  "typ": "JWT"
+}
+----
+
+=== Payload
+
+* **Claims** -> Aserciones de una entidad
+** Usuario
+** Metadata
+* **Reserved claims** -> Claims recomendados
+** iss (Issuer)
+** exp (Expiration time)
+** sub (Subject)
+** aud (Audience)
+
+=== Payload
+
+* **Public claims** -> Claims definidos por 
+el IANA JSON Web Token Registry
+* **Private claims** -> Claims personalizados
+para solo ser usados entre sistemas que los
+adopten
+
+=== Signature
+
+* Integra el header y el payload, así como 
+un "secreto" adicional, los codifica en Base64
+y aplica un algoritmo de firmado
+
+=== Funcionamiento
+
+image::jwt.png[]
+
+=== Ventajas
+
+* CORS (Cross Origin Resource Sharing)
+* No requiere protección CSRF
+* Mejor integración con dispositivos móviles
+* No se requiere una persistencia de la sesión
+
+=== Desventajas
+
+* Vulnerable a ataques XSS
+* El token puede contener permisos revocados
+* Entre más claims > tamaño
+* Un verdadero entorno stateless y las funciones
+de revocación son mutuamente exclusivas
+
+=== Ejemplo 02

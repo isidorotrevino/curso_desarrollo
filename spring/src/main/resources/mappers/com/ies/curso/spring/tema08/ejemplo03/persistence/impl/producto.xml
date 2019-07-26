@@ -42,7 +42,7 @@
 			
 			AND nombre LIKE 'Producto${nombre}%'
 		</if>
-		<include refid="miConsultaGenerica"></include>
+<!-- 		<include refid="miConsultaGenerica"></include> -->
 		
 	</select>
 	<!-- <foreach collection="nombres" open="AND nombre IN ("

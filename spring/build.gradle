@@ -95,5 +95,10 @@ dependencies {
 	implementation group: 'org.mybatis.spring.boot', name: 'mybatis-spring-boot-starter', version: '2.1.0'
 	implementation group: 'com.h2database', name: 'h2', version: '1.4.199'
 	
+	//SPRING SECURITY
+	compile("org.springframework.boot:spring-boot-starter-security")
+	//JWT
+	compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
+	
 }
 

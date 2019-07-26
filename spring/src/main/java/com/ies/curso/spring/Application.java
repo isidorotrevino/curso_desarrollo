@@ -30,9 +30,9 @@ public class Application {
 		calc.obtenerSaldoPeriodo(LocalDate.now(), LocalDate.parse("2019-01-01"));
 		
 		/// VARIOS
-		log.info("Mostramos los beans cargados");
+		log.debug("Mostramos los beans cargados");
 		for(String str : ctx.getBeanDefinitionNames()) {
-			log.info("-> {}",str);
+			log.debug("-> {}",str);
 		}
 	}
 
