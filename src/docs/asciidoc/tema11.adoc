@@ -1,0 +1,94 @@
+= Curso de Desarrollo
+IES Systems <isidoro.trevino@ies-systems.com>
+2019-07-29
+:revnumber: {project-version}
+:example-caption!:
+ifndef::imagesdir[:imagesdir: images]
+ifndef::sourcedir[:sourcedir: ../java]
+
+== Spring Security Authorization
+
+== Computer Security
+
+* **Principal** -> Entidad que puede ser autenticada
+por un sistema o red
+* **Security Identifier (SID)** -> Identificador inmutable
+de un usuario, grupo u otro Principal.
+* **Role** -> Función o título que define un nivel de autoridad
+** Contiene una serie de privilegios
+
+=== Computer Security
+
+* **Privilege** -> Delegación de autoridad para realizar
+funciones en un sistema
+** Permite realizar una acción con consecuencias de seguridad
+** También llamados **Permissions/Authorities*
+
+== Authorización (Arquitectura)
+
+* **AccessDecisionManager** -> Toma las decisiones de
+autorizar la ejecución de una URL / Método con base en diferentes
+criterios
+** **AffirmativeBased** -> Permite el paso si cualquier
+votante regresa un resultado afirmativo
+** **ConcensusBased** -> Permite el paso si la mayoría
+de los votantes aprueban
+
+=== Authorización
+
+* **UnanimousBased** -> Todos los votantes deben autorizar
+o abstenerse
+* **AccessDecisionVoter** -> Vota en las decisiones de autorización
+** **RoleVoter**
+** **AuthenticatedVoter**
+
+=== Autorización
+
+image::access-decision-voting.png[]
+
+=== Autorización
+
+image::authorization.jpg[]
+
+=== Autorización
+
+* AuthenticatedVoter
+** Anónimo
+** Autenticado
+** "RememberMe"
+* RoleVoter
+** Prefijo "ROLE_"
+
+=== Autorización a nivel método
+
+* **@EnableGlobalMethodSecurity** -> Activa
+la revisión de Annotations a nivel método
+* **GlobalMethodSecurityConfiguration** -> Permite
+la personalización de la configuración de 
+autorización
+
+=== Autorización a nivel método
+
+* **@Secured** -> Permite especificar una lista
+de roles en un método
+* **@RolesAllowed** -> Versión JSR 250
+[source,java]
+----
+@Secured({ "ROLE_USER", "ROLE_ADMIN" })
+public boolean realizarCargo(BigDecimal cantidad) 
+----
+
+=== Autorización a nivel método
+
+* **@PreAuthorize** y **@PostAuthorize**
+** Permiten usar Spring Expression Language (SpEL)
+[source,java]
+----
+@PreAuthorize("hasRole('ROLE_ADMIN') or " +
+"#username == authentication.principal.username")
+@PostAuthorize("returnObject.username == authentication.principal.name")
+public Usuario cargarUsuario(String username){
+}
+----
+
+=== Ejemplo 01

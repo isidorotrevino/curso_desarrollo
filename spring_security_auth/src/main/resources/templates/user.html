@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="https://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<title>Curso de desarrollo</title>
+</head>
+<body>
+	<h1>Area de usuario</h1>
+	<p>Area del usuario [[${user?:''}]]</p>
+	<a th:href="@{/user/operacion}">Realizar operación de usuario</a><br/>
+	<a th:href="@{/user/adminOper}">Realizar operación de administrador (desde controlador de usuario)</a><br/>
+	<a th:href="@{/admin/operacion}">Realizar operación de administrador</a>
+</body>
+</html>

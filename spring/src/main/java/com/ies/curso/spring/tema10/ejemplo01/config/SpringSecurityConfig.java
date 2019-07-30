@@ -40,7 +40,7 @@ public class SpringSecurityConfig implements WebMvcConfigurer {
 	 */
 	@Bean
 	public PasswordEncoder encoder() {
-		return new BCryptPasswordEncoder();
+		return new BCryptPasswordEncoder(5);
 	}
 
 	/**
@@ -120,7 +120,9 @@ public class SpringSecurityConfig implements WebMvcConfigurer {
 		protected void configure(HttpSecurity http) throws Exception {
 			log.info("Configurando seguridad normal");
 			http.authorizeRequests()
-//                .antMatchers("/login").permitAll() // Permite las solicitudes de login
+					.antMatchers("/saludar").permitAll()
+//                .antMatchers("/index").permitAll() // Permite las solicitudes de login
+					.antMatchers("/admin").hasAnyRole("ADMIN","SUPER_ADMIN")
 					.anyRequest().authenticated() // Cualquier solicitud debe ir autenticada
 					.and().formLogin().loginPage("/login") // La pagina de login estará en la ruta
 					.permitAll() // Naturalmente el login no debe estar restringido
@@ -140,6 +142,8 @@ public class SpringSecurityConfig implements WebMvcConfigurer {
 	 */
 	public void addViewControllers(ViewControllerRegistry registry) {
 		registry.addViewController("/login").setViewName("login");
+		registry.addViewController("/disclaimer").setViewName("disclaimer_publico");
+		
 	}
 
 	/**
@@ -167,7 +171,10 @@ public class SpringSecurityConfig implements WebMvcConfigurer {
 
 			http.exceptionHandling().accessDeniedPage("/login");
 
-			// Agregamos el filtro para procesar JWT
+			// Agregamos el filtro para procesar JWT (si el request ya trae un 
+			// header con el token JWT y es válido, que permita pasar el request
+			// y nos asignes un SecurityContext con la información de autenticación)
+			// En este caso el SecurityContext lo almacena en un ThreadLocal
 			http.apply(new JwtTokenFilterConfigurer(jwtTokenProvider));
 
 		}
