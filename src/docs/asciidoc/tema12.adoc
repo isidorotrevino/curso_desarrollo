@@ -1,0 +1,304 @@
+= Curso de Desarrollo
+IES Systems <isidoro.trevino@ies-systems.com>
+2019-07-30
+:revnumber: {project-version}
+:example-caption!:
+ifndef::imagesdir[:imagesdir: images]
+ifndef::sourcedir[:sourcedir: ../java]
+
+== Certificados y SSL
+
+* **Certificado X509** -> Permite verificar que
+una llave pública pertenece a un usuario, computadora
+y / o servicio específico cuya identidad está 
+contenida dentro del certificado
+* **Certificate Authority** -> Organización que 
+puede expedir y validar certificados
+
+=== Certificados
+
+* **Serial number** -> Número de serie para identificar
+el certificado
+* **Algorithm** -> Sirve para indicar el algoritmo usado
+para generarlo
+* **Issuer distinguished name** -> Nombre de la entidad 
+emisora del certificado
+* **Periodo de validez** 
+
+=== Certificados
+
+* **Subject distinguished name** -> Nombre del propietario
+* **Subject public key** -> Llave pública
+* **Extensions**
+
+=== Para obtener un certificado
+
+* Se crea una llave privada
+* Se genera un "Certificate Signing Request" (CSR)
+* El CA genera un certificado con base en el CSR
+
+=== OpenSSL
+
+* Herramienta que permite generar llaves y certificados o
+crear comunicaciones mediante SSL
+
+[source,text]
+----
+$ sudo apt-get install openssl
+----
+
+=== Generación de una llave privada
+
+[source,text]
+----
+$ openssl genrsa -out key.pem 2048
+----
+
+=== Generación de un CSR (Simple)
+
+* Solicitará los datos en pantalla
+
+[source,text]
+----
+$ openssl req -out micert.csr -key key.pem -new
+----
+
+=== Generación de un CSR (Compuesto)
+
+* Se utiliza cuando se requiere añadir extensiones
+* Hay que crear archivo de configuración
+** Ver archivo en tema12_ssl/config/csr_complejo_config
+
+[source,text]
+----
+$ openssl req -out micertcomplejo.csr \
+-config ../config/csr_complejo_config \
+-key key.pem -new 
+----
+
+=== Generación de un Certificado Auto-firmado
+
+* Util para desarrollo
+* No sirve en entorno productivo
+
+[source,text]
+----
+$ openssl x509 -req -days 365 -in micertcomplejo.csr \
+-signkey key.pem -sha256 -out server.crt
+----
+
+=== Verificar CSR
+
+[source,text]
+----
+$ openssl req -text -noout -verify -in micertcomplejo.csr
+----
+
+=== Ver certificados
+
+[source,text]
+----
+$ openssl x509 -text -noout -in server.crt
+----
+
+== Keytool
+
+* Herramienta del JDK para administrar bases de 
+datos de:
+** Llaves criptográficas
+** Certificados x509
+** Certificados PKCS12
+
+=== Generación de par de llaves
+
+* Permite crear un almacén de llaves (JKS) para 
+administrar certificados que permitan a aplicaciones
+java generar conexiones SSL confiables:
+
+[source,text]
+----
+$ keytool -genkeypair -keystore llaves_salida.p12 \
+-dname "CN=misistema.com, OU=IT, O=IES, L=CDMX, ST=MX, C=MX" \
+-keypass mipass -storepass mipass -storetype PKCS12 \
+-keyalg RSA -alias servicios_ies \
+-ext SAN=ip:127.0.0.1,ip:192.168.1.35,dns:otrosistema.com
+----
+
+=== Importar certificados a un keystore
+
+[source,text]
+----
+$ keytool -import -trustcacerts -alias misistema \
+-file server.crt -keystore llaves_salida.p12
+----
+
+=== Revisar certificados en un keystore
+
+[source,text]
+----
+$ keytool -list -v -keystore llaves_salida.p12
+----
+
+== Integración con proyectos Java / Spring
+
+* Esto sirve para realizar conexiones SSL a servidores
+remotos
+** Para exponer servicios con SSL se configura el 
+web server (Tomcat, Weblogic, etc)
+* Integrar keystore al proyecto
+* Mantener en un lugar seguro datos de configuración
+
+.configuracion.properties
+[source,text]
+----
+truststore.ubicacion=classpath:/ruta_en_classpath/keystore.p12
+truststore.password=passwordSeguro
+----
+
+=== Integración
+
+* Se carga keystore con dichos datos
+
+[source,java]
+----
+@Value("${truststore.ubicacion}")
+private Resource trustStore;
+@Value("${truststore.password}")
+private String trustStorePassword;
+public SSLContext sslContext() throws Exception {
+	KeyStore keys = KeyStore.getInstance(KeyStore
+		.getDefaultType());
+	File file = File.createTempFile("orig", "cert");
+	Files.copy(
+	      trustStore.getInputStream(), 
+	      file.toPath(), 
+	      StandardCopyOption.REPLACE_EXISTING);
+		
+	keys.load(trustStore.getInputStream(),
+		trustStorePassword.toCharArray());
+    return SSLContextBuilder.create()	    		
+        .loadTrustMaterial(file, 
+        trustStorePassword.toCharArray()).build();
+  }
+----
+
+=== Integración
+
+* Se genera un SSLConnectionSocketFactory
+
+[source,java]
+----
+public SSLConnectionSocketFactory sslConnectionSocketFactory() 
+	throws Exception {
+	return new SSLConnectionSocketFactory(sslContext(), 
+		NoopHostnameVerifier.INSTANCE);
+}
+----
+
+=== Integración
+
+* Se genera un cliente HTTP con dicho socketFactory (Aplica para 
+Commons HttpClient)
+
+[source,java]
+----
+public HttpClient httpClient() throws Exception {
+		
+CloseableHttpClient httpClient = 
+	HttpClients.custom()
+	    .setSSLSocketFactory(sslConnectionSocketFactory())
+	    .addInterceptorFirst(new HttpComponentsMessageSender
+	    	.RemoveSoapHeadersInterceptor())
+	    .build();
+    return httpClient;
+}
+----
+
+=== Integración aceptando cualquier certificado
+
+* Solo aplica en modo desarrollo
+* Muy riesgoso
+
+[source,java]
+----
+//Deben ser las primeras líneas de ejecución
+SSLContext context = SSLContext.getInstance("TLSv1.2");
+context.init(null,null,null);
+SSLSocketFactory factory = (SSLSocketFactory)context
+	.getSocketFactory();
+SSLSocket socket = (SSLSocket)factory.createSocket();
+SSLContext.setDefault(context);
+----
+
+== SSH, SCP, SFTP
+
+* Protocolo de comunicación de red criptográfico
+para crear enlaces sobre una red no segura
+* Se requiere un SSH client y un SSH Server
+* Expuesto por el puerto 22
+
+[source,text]
+----
+$ ssh <usuario>@<host o ip> [-p <puerto>]
+----
+
+=== SCP 
+
+* Permite copiar archivos desde y hacia un servidor
+remoto bajo el protocolo SSH
+
+[source,text]
+----
+# Para copiar archivos desde el servidor
+$ scp <usuario>@<host o ip>:<ruta_origen> <ruta_destino>
+# Para copiar archivos hacia el servidor
+$ scp <ruta_origen> <usuario>@<host o ip>:<ruta_destino>
+----
+
+=== SSH Tunnel / Port forwarding
+
+* Sirve para poder alcanzar puertos que 
+pudieran estar bloqueados por un FW / Proxy
+* **Forwarding local** -> Sirve para exponer
+un puerto ubicado en un servidor remoto y que 
+se comporte como un puerto local
+
+[source,text]
+----
+$ ssh <usuario>@<host|ip> \
+-L<Puerto local>:<servidor remoto>:<puerto remoto>
+----
+
+=== SSH Tunnel / Port forwarding
+
+* **Forwarding remoto** -> Sirve para exponer
+un puerto local hacia un servidor remoto
+
+[source,text]
+----
+$ ssh <usuario>@<host|ip> \
+-R<Puerto remoto>:<servidor local>:<puerto local>
+----
+
+== RSYNC
+
+* Herramienta para sincronizar / transferir directorios
+y archivos
+* Puede ejecutarse sobre SSH
+
+[source,text]
+----
+$ rsync -av [<usuario>@<host|ip>:]<ruta_origen> \
+ [<usuario>@<host|ip>:]<ruta_destino>
+----
+
+== NMap
+
+* Herramienta para pruebas de ataque de red
+* Solo funciona como root
+* Úsese bajo su propio riesgo
+
+[source,text]
+----
+$ nmap -sS <host|ip>
+----

@@ -26,15 +26,15 @@ import lombok.extern.slf4j.Slf4j;
 @Configuration
 @Slf4j
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true) //EJEMPLO 01 TEMA 11
 public class SpringSecurityConfig  extends WebSecurityConfigurerAdapter implements WebMvcConfigurer {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		log.info("Configurando seguridad normal");
-		http.authorizeRequests()
-				.antMatchers("/user/**").permitAll()
-				.antMatchers("/admin/**").hasAnyRole("ADMIN","SUPER_ADMIN")
+		http.authorizeRequests() // Autorización
+				.antMatchers("/user/**").authenticated() // Autorización
+				.antMatchers("/admin/**").hasAnyRole("ADMIN","SUPER_ADMIN")// Autorización
 				.anyRequest().authenticated() // Cualquier solicitud debe ir autenticada
 				.and().formLogin().loginPage("/login") // La pagina de login estará en la ruta
 				.permitAll() // Naturalmente el login no debe estar restringido
