@@ -16,7 +16,7 @@ CN = www.misistema.com
 
 [ req_ext ]
 subjectAltName = @alt_names
-keyUsage = digitalSignature, keyEncipherment, serverAuth, clientAuth, critical
+keyUsage = digitalSignature, keyEncipherment
 
 [ alt_names ]
 DNS.1 = misistema.com

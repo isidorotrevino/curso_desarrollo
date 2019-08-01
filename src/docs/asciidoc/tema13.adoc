@@ -1,0 +1,122 @@
+= Curso de Desarrollo
+IES Systems <isidoro.trevino@ies-systems.com>
+2019-08-01
+:revnumber: {project-version}
+:example-caption!:
+ifndef::imagesdir[:imagesdir: images]
+ifndef::sourcedir[:sourcedir: ../java]
+
+== Microservicios
+
+* Estilo de arquitectura
+* Descomposición en componentes
+** Privilegio a la autonomía
+** Administrables y coordinables
+
+=== Microservicios
+
+image::monolithic-vs-microservices.png[Diagrama]
+
+=== Diferencias vs. SOA
+
+* Mejor tolerancia a excepciones
+* No depender de un ESB
+* Definición de una API de comunicación sin importar el lenguaje subyacente
+
+== Comunicaciones HTTP
+
+* Protocolo sin estado - Stateless (Solicitud - Respuesta)
+* Protocolo sin conexión - Connectionless
+* Independiente al tipo de medio
+
+=== HTTP
+
+image::HTTP.png[Diagrama]
+
+== Servidores Web
+
+* Servlet containers
+** Permiten la ejecución de Java "Servlets", objetos java
+orientados a atender peticiones HTTP
+** Implementación por referencia de facto: Apache Tomcat
+* Netty
+** Framework de transmisión de datos via red
+** Diseñado para mitigar las limitantes de la Java Servlet API
+
+=== Servidores Web
+
+|=== 
+| Tomcat | Netty
+
+| IO | NIO
+| Stream Oriented | Buffer Oriented
+| Blocking IO | Non Blocking IO Selectors
+|===
+
+== The twelve factor app
+
+* Metodología para construir aplicaciones **SaaS**
+** Formatos declarativos
+** Contrato claro
+** Integración con plataformas en la nube
+** Minimizar diferencias entre entornos
+** Escalar
+
+=== Twelve factors
+
+* I **Código Base**
+** Una sola fuente de código y con soporte a versiones
+* II **Control de dependencias**
+** Aisladas y definidas de manera explícita
+* III **Configuraciones**
+** Separación estricta entre configuración y código
+
+=== Twelve factors
+
+* IV **Backing Services**
+** Los recursos conectables deben ser transparentes en
+su integración
+* V **Construir, distribuir, ejecutar**
+** Las etapas de construcción, distribución y ejecución deben funcionar 
+separadas
+* VI **Procesos**
+** Se debe poder ejecutar un proceso de manera múltiple y sin estado
+
+=== Twelve factors
+
+* VII **Asignación de puertos**
+** Cada proceso puede escuchar peticiones en un puerto distinto
+* VIII **Concurrencia**
+** Cada proceso debe ejecutarse de manera aislada y ser monitoreable
+* IX **Desechabilidad**
+** Iniciar y terminar cada proceso de manera rápida
+
+=== Twelve factors
+
+* X **Paridad en desarrollo y producción**
+** Cada ambiente debe ser lo más similar posible
+* XI **Bitácoras**
+** Todos los eventos deben enviarse a la salida estándar
+* XII **Gestión de procesos**
+** Cualquier script de administración debe funcionar de 
+manera idéntica al resto del proceso
+
+== Micronaut
+
+=== Instalación
+
+[source,text]
+----
+$ sdk install micronaut 1.1.4
+----
+
+=== Nuestro primer proyecto
+
+[source,text]
+----
+$ mn create-app com.ies.curso.micronaut.tema13.micronaut-demo
+----
+
+=== Micronaut
+
+==== Demo
