@@ -6,6 +6,7 @@ plugins {
     id "com.github.johnrengelman.shadow" version "4.0.2"
     id "application"
 	id "eclipse"
+	id "groovy"
 }
 
 
@@ -29,6 +30,13 @@ configurations {
     developmentOnly 
 }
 
+sourceSets {
+	main {
+		java { srcDirs = []}    // no source dirs for the java compiler
+		groovy { srcDir "src/main/java" }  // compile everything in src/ with groovy
+	}
+}
+
 dependencies {
     annotationProcessor "io.micronaut:micronaut-inject-java"
     annotationProcessor "io.micronaut:micronaut-validation"
@@ -42,6 +50,29 @@ dependencies {
     testCompile "org.junit.jupiter:junit-jupiter-api"
     testCompile "io.micronaut.test:micronaut-test-junit5"
     testRuntime "org.junit.jupiter:junit-jupiter-engine"
+
+
+//Groovy
+	compile "io.micronaut:micronaut-runtime-groovy"
+	compile "io.micronaut:micronaut-validation"
+	compileOnly "io.micronaut:micronaut-inject-groovy"
+	runtime "ch.qos.logback:logback-classic:1.2.3"
+	testCompile "io.micronaut:micronaut-inject-groovy"
+	testCompile("org.spockframework:spock-core") {
+		exclude group: "org.codehaus.groovy", module: "groovy-all"
+	}
+
+	//GORM
+	compile "io.micronaut.configuration:micronaut-hibernate-validator"
+	compile "io.micronaut.configuration:micronaut-hibernate-gorm"
+	compile group: 'org.hibernate', name: 'hibernate-ehcache', version: '5.4.0.Final'
+
+
+	runtime "com.h2database:h2:1.4.196"
+	runtime "org.apache.tomcat:tomcat-jdbc:8.0.44"
+
+	//Postgres reactive
+	 compile "io.micronaut.configuration:micronaut-postgres-reactive"
 }
 
 test.classpath += configurations.developmentOnly
@@ -58,6 +89,10 @@ tasks.withType(JavaCompile){
 
 shadowJar {
     mergeServiceFiles()
+}
+
+tasks.withType(GroovyCompile) {
+	groovyOptions.forkOptions.jvmArgs.add('-Dgroovy.parameters=true')
 }
 
 run.classpath += configurations.developmentOnly
