@@ -205,7 +205,7 @@ $ mn create-app com.ies.curso.practica2 --features=hibernate-gorm
 
 [source,test]
 ----
-$ mn create-app com.ies.curso.dia3.demo2 \
+$ mn create-app com.ies.curso.micronaut.tema14.demo \
  --features=postgres-reactive
 ----
 
