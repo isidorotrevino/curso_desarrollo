@@ -3,23 +3,37 @@ package com.ies.curso.micronaut.tema13.service
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 
+import com.ies.curso.micronaut.tema13.domain.Marca
 import com.ies.curso.micronaut.tema13.domain.Producto
 
 import grails.gorm.services.Service
 
 @Service(Producto)
-interface  ProductoService {
+abstract class  ProductoService {
 
-	int count()
+	abstract int count()
 	
-	Producto save(@NotBlank String nombre,@NotBlank  String sku,
+	abstract Producto save(@NotBlank String nombre,@NotBlank  String sku,
 				  String marca,Boolean descontinuado)
 	
-	List<Producto> findAll()
+	abstract List<Producto> findAll()
 	
-	List<Producto> findAllByMarca(String marca)
+	abstract List<Producto> findAllByMarca(String marca)
 	
-	Producto find(@NotNull Long id)
+	abstract List<Producto> findAllByMarcaIlike(String marca)
 	
-	Producto saveProducto(Producto producto)
+	abstract Producto find(@NotNull Long id)
+	
+	abstract Producto saveProducto(Producto producto)
+	
+	List<Producto> buscarProductos(String marca, String sku){
+		def criteria = Producto.createCriteria()
+		List productos = criteria.list{
+			eq('marca',marca)
+			if(sku!=null) {
+				ilike('sku',sku+'%')
+			}
+			
+		}
+	}
 }

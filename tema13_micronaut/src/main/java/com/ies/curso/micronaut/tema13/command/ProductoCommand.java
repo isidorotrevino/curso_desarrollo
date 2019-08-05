@@ -1,5 +1,7 @@
 package com.ies.curso.micronaut.tema13.command;
 
+import javax.annotation.MatchesPattern;
+import javax.annotation.RegEx;
 import javax.validation.constraints.NotBlank;
 
 public class ProductoCommand {
@@ -8,6 +10,8 @@ public class ProductoCommand {
 	protected String nombre;
 	@NotBlank
 	protected String sku;
+	//@MatchesPattern(value = "[A-Z] {5}-\\d{10}")
+	
 	protected String marca;
 	protected Boolean descontinuado;
 	

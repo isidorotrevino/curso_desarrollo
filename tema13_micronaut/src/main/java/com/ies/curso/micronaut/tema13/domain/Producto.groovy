@@ -12,5 +12,7 @@ class Producto {
 	
 	static constraints = {
 		marca (nullable:true)
+		sku (minSize:2)
+		//marca (matches:'(.+\\d{2}){3}')
 	}
 }
