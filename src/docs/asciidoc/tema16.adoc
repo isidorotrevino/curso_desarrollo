@@ -1,0 +1,369 @@
+= Curso de Desarrollo / Micronaut
+IES Systems <isidoro.trevino@ies-systems.com>
+2019-08-06
+:revnumber: {project-version}
+:example-caption!:
+ifndef::imagesdir[:imagesdir: images]
+ifndef::sourcedir[:sourcedir: ../java]
+
+== Cliente HTTP
+
+* Brinda la posibilidad de invocar a otros microservicios
+* Permite la creación de clientes dinámicos a partir de una interface
+
+[source,java]
+----
+public interface ProductoOperations{
+	Flowable<Producto> consultarProductos();
+}
+----
+
+=== Cliente HTTP
+
+* Se crea otra interface a la que se asigna un annotation para crear un 
+cliente dinámico
+
+[source,java]
+----
+@Client("http://localhost:8081") 
+public interface ProductoClient extends ProductoOperations {
+
+    @Get("/producto")
+    Flowable<Producto> findAll();
+}
+----
+
+=== Cliente HTTP
+
+==== DEMO
+
+== Service Discovery
+
+* Habilidad de los microservicios de encontrarse sin conocer la ubicación 
+física o la dirección IP de los mismos
+** De manera manual mediante DNS
+** Mediante servidores de descubrimiento como Consul, Zookeeper o Eureka
+** Delegando la labor al contenedor, por medio de Kubernetes o Swarm
+
+=== Consul
+
+* Servidor de descubrimiento de servicios
+** Revisión de salud
+** Almacenamiento de llaves clave-valor
+** Soporte multi-datacenter
+
+=== Integración Micronaut / Consul
+
+[source,groovy]
+.build.gradle
+----
+compile "io.micronaut:micronaut-discovery-client"
+----
+
+[source,yaml]
+.application.yml
+----
+consul:
+  client:
+    registration:
+      enabled: true
+    defaultZone: "${CONSUL_HOST:localhost}:${CONSUL_PORT:8500}"
+----
+
+=== Integración Micronaut / Consul
+
+* Se actualizan los "Clientes HTTP", cambiando las ip's por nombres de servicio
+
+[source,java]
+----
+@Client("http://localhost:8081") 
+public interface ProductoClient extends ProductoOperations
+---- 
+
+* Por:
+
+[source,java]
+----
+@Client("producto") 
+public interface ProductoClient extends ProductoOperations
+---- 
+
+=== Integración Micronaut / Consul
+
+==== DEMO
+
+[source,text]
+----
+$ docker run -p 8500:8500 consul
+----
+
+== Rastreo Centralizado
+
+* Presenta retos especiales en las arquitecturas distribuidas
+* Existen sistemas de rastreo distribuido que mitigan la problemática
+** Zipkin
+** Jaeger
+* Estándar **OpenTracing**
+
+=== Conceptos
+
+* **Span** -> Bloque primario de un rastreo distribuido
+** Unidad de trabajo individual en un sistema distribuido
+* **Tag** -> Anotaciones llave valor que se agregan a un span
+
+=== Integración con Micronaut
+
+[source,groovy]
+.build.gradle
+----
+runtime 'io.zipkin.brave:brave-instrumentation-http'
+runtime 'io.zipkin.reporter2:zipkin-reporter'
+compile 'io.opentracing.brave:brave-opentracing'
+----
+
+=== Integración con Micronaut
+
+[source,java]
+.application.yml
+----
+tracing:
+    zipkin:
+        http:
+            url: http://localhost:9411
+        enabled: true
+----
+
+=== Rastreo Centralizado
+
+==== DEMO
+
+[source,text]
+----
+$ docker run -d -p 9411:9411 openzipkin/zipkin
+----
+
+== MyBatis
+
+* Framework de persistencia orientado a facilitar la ejecución de 
+consultas
+* Patrón de diseño SQL - Mapper
+** Permite la ejecución de sentencias SQL complejas
+** Disminuye los riesgos de SQL Injection (entre otros)
+
+=== Uso
+
+* Agregar dependencia
+
+[source,groovy] 
+----
+compile group: 'org.mybatis', name: 'mybatis', version: '3.4.6'
+compile "io.micronaut.configuration:micronaut-jdbc-hikari"
+compile group: 'org.postgresql', name: 'postgresql', version: '42.2.5'
+----
+
+=== Configuración
+
+* Configuración General
+
+[source,java]
+----
+TransactionFactory transactionFactory = new JdbcTransactionFactory();
+Environment environment =
+        new Environment("production", transactionFactory, dataSource);
+Configuration configuration = new Configuration(environment);
+----
+
+=== Configuración
+
+[source,java]
+----
+InputStream inputStream = Resources.getResourceAsStream(mapperResource);
+XMLMapperBuilder mapperParser = new XMLMapperBuilder(inputStream, configuration, mapperResource, configuration.getSqlFragments());
+mapperParser.parse();
+----
+
+=== Mappers
+
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ies.curso.dia5.PruebaReactive">
+     .....
+</mapper> 
+----
+
+=== MyBatis
+
+==== DEMO
+
+== Información estática
+
+[source,yml]
+.application.yml
+----
+    router:
+        static-resources:
+            default:
+                enabled: true
+                mapping: /**
+                paths: classpath:public
+----
+
+== Websockets y SSE
+
+* Configuración mediante annotations
+
+[source,java]
+----
+@ServerWebSocket("/chat/{topic}/{username}") 
+public class ChatServerWebSocket{
+	private WebSocketBroadcaster broadcaster;
+	
+	@OnOpen 
+    public void onOpen(String topic, String username, WebSocketSession session) 
+    ....
+    @OnMessage 
+    public void onMessage(String topic,String username,String message,
+            WebSocketSession session)
+    ....
+    @OnClose 
+    public void onClose(String topic,String username,
+            WebSocketSession session) 
+}
+----
+
+=== WebSockets
+
+* Argumentos
+** Diversos String correspondientes a variables de URI
+** Instancia de WebSocketSession
+* OnClose
+** Opcionalmente un CloseReason
+* OnMessage
+** Parámetro que define el cuerpo
+*** WebsocketFrame
+*** Un primitivo o un String
+
+
+=== WebSockets
+
+* OnMessage (Cont.)
+*** byte[] ByteBuffer
+*** POJO (Bean)
+* OnError
+** Exception
+
+=== Cliente
+
+[source,java]
+----
+@Inject
+@Client("http://localhost:8080")
+RxWebSocketClient webSocketClient;
+----
+
+=== Cliente Web (JS)
+
+[source,javascript]
+----
+var webSocket = new WebSocket("ws://" + location.hostname + ":" 
+	+ location.port + "/ws/chat/" + hash[1] + "/" + hash[2]);
+webSocket.onmessage = function (msg) { updateChat(msg); };
+webSocket.onclose = function () { 
+	alert("WebSocket connection closed") };
+webSocket.send(message);
+----
+
+=== WebSockets
+
+==== DEMO
+
+[source,text]
+----
+http://localhost:8080/#/proyecto/juan
+http://localhost:8080/#/proyecto/pedro
+----
+
+== ServerSentEvents
+
+* Implementación de ServerSentEvents (SSE)
+* Hay que implementar Reactive Streams Publisher que emita
+objetos de tipo Event
+* El Publisher puede ser una tarea en background (calendarizada, por ejemplo)
+
+=== ServerSentEvents
+
+==== DEMO
+
+[source,text]
+----
+$ curl http://localhost:8080/noticias
+----
+
+== Propagación de Token
+
+* Técnica que nos permitirá mantener la seguridad en los microservicios, con
+un punto único de autenticación
+* El token JWT podrá viajar entre las diferentes invocaciones de microservicios
+* El Gateway o punto de acceso configura su seguridad de la manera acostumbrada
+
+=== Gateway
+
+* Se agrega la opción de enviar el JWT en el header
+
+[source,yml]
+.application.yml
+----
+writer:
+  header:
+    enabled: true
+----
+
+=== Gateway
+
+* Se pueden delimitar los clientes seguros mediante
+expresiones regulares
+
+[source,yml]
+.application.yml
+----
+propagation:
+  enabled: true
+  service-id-regex: "userecho"
+----
+
+=== Cliente
+
+* Protege sus métodos con @Secured
+
+[source,java]
+----
+ @Secured("isAuthenticated()")
+----
+
+* Debe configurar el mismo "secreto" de firma de JWT que el Gateway
+
+[source,yml]
+.application.yml
+----
+secret: 
+   validation:
+      secret: secretoBienResguardadoYComunParaTodos 
+----
+
+=== Propagación de Token
+
+==== DEMO
+
+[source,text]
+----
+$ curl -X "POST" "http://localhost:8080/login" \
+     -H 'Content-Type: application/json; charset=utf-8' \
+     -d $'{ "username": "juan","password": "perez" }'
+
+$ curl "http://localhost:8080/user" -H 'Authorization: 
+	Bearer <access_token>'
+----

@@ -16,7 +16,7 @@ public class DailyEmailJob {
         this.emailUseCase = emailUseCase;
     }
 
-    @Scheduled(cron = "0 30 4 1/1 * ?") // <3>
+    @Scheduled(cron = "0 * * 1/1 * ?") // <3>
     void execute() {
         emailUseCase.send("john.doe@micronaut.example", "Test Message"); // <4>
     }

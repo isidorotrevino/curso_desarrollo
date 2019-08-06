@@ -1,3 +1,9 @@
+#<micronaut>
+#  <application>
+#     <name>micronaut-seguridad</name>
+#  </application>
+#</micronaut>
+
 micronaut:
     application:
         name: micronaut-seguridad
@@ -5,13 +11,18 @@ micronaut:
         enabled: true
         endpoints:
             login:
+                path: /ingresar
                 enabled: true
             oauth:
                 enabled: true
         token:
             jwt:
                 enabled: true
+                generator:
+                    access-token-expiration: 86400
                 signatures:
                     secret:
                         generator:
                             secret: claveSuperUltraDuperSecretaYExtensa
+#micronaut.security.token.jwt.generator.access-token-expiration: 86400                            
+
