@@ -28,3 +28,4 @@ micronaut:
             userecho:
                 urls:
                 - "http://localhost:8081"
+

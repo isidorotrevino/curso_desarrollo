@@ -1,0 +1,243 @@
+= Curso de Desarrollo / Micronaut
+IES Systems <isidoro.trevino@ies-systems.com>
+2019-08-08
+:revnumber: {project-version}
+:example-caption!:
+ifndef::imagesdir[:imagesdir: images]
+ifndef::sourcedir[:sourcedir: ../java]
+
+== Micronaut - SOAP
+
+== Consumo de SOAP
+
+* Elementos a considerar
+** Beans Request/Response (se pueden generar mediante Jaxb)
+** Crear Servicio SOAP (javax.xml.soap)
+** Marshalling de Request
+** Invocación de servicio
+** Marshalling de Response
+
+=== Beans Request Response
+
+* Mediante Jaxb (Plugin de gradle o comando terminal)
+
+[source,text]
+----
+$ xjc -d <directorio_destino> -p <paquete> -wsdl \
+-npa  <ruta_archivo_wsdl>
+----
+
+=== Creación de Servicio SOAP
+
+[source,java]
+----
+Service service = Service.create(wsdlUrl, serviceName);
+----
+
+* **wsdlUrl** -> Ruta en classpath del WSDL
+* **serviceName** -> Combinación de namespace y contenido de
+tag **service**
+
+[source,xml]
+----
+targetNamespace="http://ws"
+<wsdl:service name="WSPolizasAcsel">
+----
+
+=== Creación de Servicio SOAP
+
+[source,java]
+----
+Dispatch<SOAPMessage> dispatch = 
+	service.createDispatch(portName, SOAPMessage.class, 
+	Service.Mode.MESSAGE);
+----
+
+* **dispatch** -> Clase para la invocación de endpoints
+dinámicos
+* **portName** -> Sección port del WSDL
+[source,xml]
+----
+<wsdl:port name="WSPolizasAcselHttpsSoap11Endpoint" ...
+----
+
+=== Creación de Servicio SOAP
+
+[source,java]
+----
+MessageFactory messageFactory = MessageFactory.newInstance();
+SOAPMessage soapRequest = messageFactory.createMessage();
+----
+
+* **soapRequest** -> Objeto request (envolverá nuestro bean
+de request)
+
+=== Creación de Servicio SOAP
+
+[source,java]
+----
+SOAPPart soapPart = soapRequest.getSOAPPart();
+SOAPEnvelope envelope = soapPart.getEnvelope();
+Document document = DocumentBuilderFactory.newInstance()
+	.newDocumentBuilder().newDocument();		
+----
+
+* Se prepara un DOM Document que contendrá el
+cuerpo del request
+
+=== Creación de Servicio SOAP
+
+[source,java]
+----
+jaxbMarshaller.marshal(bean, document);
+SOAPBody soapBody = envelope.getBody();
+soapBody.addDocument(document);
+----
+
+* Se convierte el bean de request en un objeto Node (xml)
+y se anexa al DOM Document creado previamente
+* Posteriormente se anexa al cuerpo del SOAP
+
+=== Creación de Servicio SOAP
+
+[source,java]
+----
+SOAPMessage soapResponse = (SOAPMessage) 
+	dispatch.invoke(soapRequest);
+---- 
+
+* Se invoca el endpoint remoto
+
+=== Creación de Servicio SOAP
+
+[source,java]
+----
+Iterator iter = soapResponse.getSOAPBody().getChildElements(); iter.hasNext();) {
+  nodo = (Node) iter.next();
+  if (Node.ELEMENT_NODE == nodo.getNodeType()) {
+    break;
+  }
+}
+----
+
+* Se itera el cuerpo de la respuesta hasta
+encontrar el primer nodo útil (no espacios 
+ni comentarios)
+
+=== Creación de Servicio SOAP
+
+[source,java]
+----
+Object obj = jaxbUnmarshaller.unmarshal(new DOMSource(nodo), 
+	responseClass).getValue();
+----
+
+* Se convierte el nodo XML al objeto Java de respuesta
+
+=== Resumen
+
+* Principal referencia (Avatar):
+** **com.ies.avatar.wspolizas.services.impl.WsPolizasServiceImpl**
+** Método ejecutarFuncion(Object request, Class<?> requestClass, Class<?> responseClass)
+*** **request** -> Bean de request
+*** **requestClass** -> Clase del request
+*** **responseClass** -> Clase a la que se convertirá el response
+
+== Exposición de SOAP
+
+* Elementos a considerar
+** Exponer como **@Controller**
+
+=== Método SOAP
+
+[source,java]
+----
+@Consumes(MediaType.TEXT_XML)
+@Produces(MediaType.TEXT_XML)
+@Post()
+public String metodo(HttpHeaders headers, 
+HttpRequest<?> request, @Body String body)
+----
+* Annotations **@Consumes** y **@Produces** para consumir/devolver XML
+* Consume **Post** (Estándar en SOAP)
+* Debe recibir headers http y el request
+* El cuerpo lo debe recibir como String
+* Debe devolver String
+
+=== Exposición de SOAP
+
+* Se parsea request String -> SOAPMessage
+
+[source,java]
+----
+SOAPMessage soapMessage = soapUtilsService.crearSoapMessage(
+  headers, request, body);
+----
+
+=== Exposición de SOAP
+
+* Se extrae bean de request de SOAPMessage
+
+[source,java]
+----
+BeanRequest req = (BeanRequest) soapUtilsService.getRequest(
+	soapMessage,
+	BeanRequest.class);
+----		
+		
+=== Exposición de SOAP
+
+* Se invoca la lógica de negocio y debe devolver
+el bean de response
+
+[source,java]
+----
+BeanResponse resp = servicioNegocio.metodoNegocio(req)		
+----
+
+=== Exposición de SOAP
+
+* Se convierte la respuesta a un string representando
+el xml
+
+[source,java]
+----
+byte[] responseBytes = soapUtilsService
+	.createResponseSoapMessage(resp,
+	BeanResponse.class);
+return new String(responseBytes);					
+----
+
+== Exposición de WSDL dinámico
+
+* Se genera a partir de los beans request/response que
+se vayan a manejar
+
+[source,java]
+----
+XsdSchema schema = soapUtilsService.generarEsquema(
+  Bean1.class,Bean2.class,...);
+
+wsdl = soapUtilsService.generarStringWsdl(schema, 
+	portTypeName, SoapConstants.IES_NAMESPACE,
+	endpointUrl);
+----
+
+=== Exposición de WSDL dinámico
+
+* **portTypeName** -> Nombre de la operación (SOAP Port)
+
+[source,xml]
+----
+<portType name = "AvatarPort">
+   <operation name = "DatosAjusteRequest">
+      <input message = "tns:DatosAjusteRequest"/>
+      <output message = "tns:DatosAjusteResponse"/>
+   </operation>
+</portType>
+----
+
+=== Exposición de WSDL dinámico
+
+* **namespace** -> Namespace de todo el wsdl
+* **endpointUri** -> URL donde se expondrá el Endpoint
