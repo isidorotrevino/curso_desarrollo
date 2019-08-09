@@ -1,0 +1,210 @@
+= Curso de Desarrollo / Micronaut
+IES Systems <isidoro.trevino@ies-systems.com>
+2019-08-09
+:revnumber: {project-version}
+:example-caption!:
+ifndef::imagesdir[:imagesdir: images]
+ifndef::sourcedir[:sourcedir: ../java]
+
+== Siniestros
+
+=== Generalidades
+
+* Arquitectura basada en Micronaut
+** Separado por microservicios con base en funcionalidad
+** Uso de MyBatis con Stored Procedures (Funciones)
+** Configuración basada en Consul (o standalone)
+
+=== Principales módulos
+
+* Containers
+* Commons
+* Gateway
+* Main
+* Avatar*
+* Templates
+* Carga
+* Notificaciones
+
+== Containers
+
+* Contiene tareas Gradle para interactuar con
+contenedores Docker 
+** Consul
+
+=== Principales tareas (./gradlew)
+
+* **cargarImagenConsul** -> Descarga la imagen
+para docker consul
+* **crearConsul** -> Crea la definición de un contenedor
+para consul
+* **ejecutarConsul** -> Ejecuta la imagen consul
+* **cargarConfiguracion** -> Carga la configuración de cada
+microservicio a Consul
+
+=== Carpetas principales
+
+* **src/main/config** -> Configuración de los 
+diferentes microservicios en formato json
+* **_general.json** -> Configuración que aplica para
+todos los microservicios
+
+== Commons
+
+* Clases y utilerías de uso compartido entre todos los
+proyectos
+
+===  Principales clases
+
+* Beans Request / Response
+* Interfaces "Operations" (Definen las operaciones a 
+exponer en los Controllers y/o consumir en los Clients)
+* Clases de uso general en el intercambio de mensajes
+**(com.ies.siniestros.commons.general)**
+
+=== Configuración de Mybatis
+
+* Clase **com.ies.siniestros.commons.config.MybatisFactory**
+* Paquete **com.ies.siniestros.commons.utils.mybatis.typehandler**
+** Contiene Type Handlers
+*** Convierten tipos especiales de Postgresql a Java y viceversa
+
+=== Manejo de mensajes
+
+* Paquete **com.ies.siniestros.commons.utils.i18n**
+* Clases relevantes:
+** Message
+** InMemoryDatabaseMessageSource
+
+=== Interceptores
+
+* Pueden interceptar llamadas desde y hacia Controllers
+* Se usan para decorar la respuesta (agregar headers o procesar
+algunas excepciones)
+* Clases relevantes:
+** com.ies.siniestros.commons.utils.interceptors.CommonRequest
+** com.ies.siniestros.commons.utils.interceptors.CommonRequestInterceptor
+
+=== Utilerias diversas
+
+* Paquete **com.ies.siniestros.commons.utils.object**
+* Tomado parcialmente de Spring y de Bean Utils
+* Utilerías para manejo de objetos, reflection, etc
+
+=== Utilerías generales de SOAP
+
+* Paquete **com.ies.siniestros.commons.utils.soap**
+* Clases relevantes:
+** **SoapUtilsServiceImpl** -> Conversión de objetos Java a
+mensajes SOAP y viceversa, generación de WSDL, generación
+de esquemas XSD
+
+== Gateway
+
+* Punto de acceso entre el Frontend y los demás microservicios
+* También controla el login
+
+=== Seguridad
+
+* Se reimplementaron algunas clases por las necesidades especiales
+del proyecto
+** LoginController
+** RequestBackedUsernamePasswordCredentials -> Objeto del request
+** Usuario -> Objeto Principal
+** AuthenticationProviderDevEnv -> Gestiona autenticación
+** SiniestrosJWTClaimsSetGenerator -> Agrega claims adicionales a JWT
+
+== Main
+
+* Ejecuta todas las operaciones de negocio principales
+** Acceso a Base de Datos
+** Envío de correos
+** Envío de SMS
+
+=== Envío de correos
+
+* Mediante SendGrid (sendgrid.net)
+* Paquete **com.ies.siniestros.mail**
+* Clases relevantes
+** MailController
+** MailServiceConfig
+** MailServiceImpl
+
+=== Envío de SMS
+
+* Mediante servicios SOAP a Calixta
+* Paquete **com.ies.siniestros.sms**
+* Clases relevantes
+** SmsServiceImpl
+** SmsServiceConfig
+
+== Avatar
+
+* Microservicio independiente al resto
+* Solo depende del proyecto Commons
+
+== Templates
+
+* Se encarga de procesar plantillas JRXML
+(Jasper reports) y devolver reportes en PDF
+* Clases relevantes
+** TemplateController
+** JasperTemplateService
+
+=== Formato del Mensaje
+
+[source,json]
+----
+{
+    "nombrePlantilla": "Resguardo.jrxml", <1>
+    "parametros": { <2>
+        "numFolio": "00000001",
+        "numeroReporte": "S00004774",
+        "fechaOcurrido": "2019-05-22",
+        ....
+    },
+    "contenido": [ <3>
+        {
+        	"campo1":"valor1",
+        	"campo2":"valor2",
+        	...
+        },
+        ...
+    ]
+}
+----
+<1> Nombre de la plantilla (Corresponde a un archivo
+.jrxml dentro de la carpeta src/main/resources)
+<2> Parámetros del reporte (Corresponde a elementos de
+tipo "Parameter" en el jrxml)
+<3> Campos del reporte (Corresponde a elementos de
+tipo "Field" en el jrxml)
+
+== Carga
+
+* Microservicio enfocado en la carga de archivos
+* Trabaja actualmente con Google Cloud Storage
+* Clases relevantes
+** PersistenceConfig
+** GoogleCloudCargaPersistence
+** CargaController
+
+== Notificaciones
+
+* Especializado en recibir notificaciones de Postgres
+* Es el único que se comunica de manera inversa
+** Desde Notificaciones hacia Main
+* Clases relevantes
+** NotificacionEstadoDaoImpl
+** NotificacionServiceImpl
+** NotificacionesClient
+
+=== Eventos con Postgres Reactive
+
+* Ubicado en **NotificacionEstadoDaoImpl**
+** Se invoca **client.getConnection** -> Conexión que
+escuchará los eventos (siempre quedará vivo)
+** **conn.notificationHandler** -> Se dispara cuando
+Postgres lanza un evento
+** **conn.query** -> Se usa para comenzar a 
+escuchar los canales de eventos de Postgres
